@@ -1597,7 +1597,8 @@ let offscreenArrows=[];
 
 const STORE={settings:'np_settings_v3',shop:'np_shopOwned_v3',gold:'np_gold_v3',highscore:'np_highscore',achieve:'np_achieve'};
 function loadJSON(key,fallback){try{const raw=localStorage.getItem(key);return raw?JSON.parse(raw):fallback;}catch(e){return fallback;}}
-function saveJSON(key,value){try{localStorage.setItem(key,JSON.stringify(value));}catch(e){}}
+let __npStorageWarned=false;
+function saveJSON(key,value){try{localStorage.setItem(key,JSON.stringify(value));return true;}catch(e){if(!__npStorageWarned){__npStorageWarned=true;try{if(typeof console!=='undefined')console.warn('[neon] localStorage write failed:',e);}catch(_){}try{if(typeof floatText==='function'&&typeof player!=='undefined'&&player)floatText(player.x,player.y-50,'SAVE FAILED – STORAGE FULL','#ff5a5a',true);}catch(_){}}return false;}}
 function loadNumber(key,fallback=0){try{const n=Number(localStorage.getItem(key));return Number.isFinite(n)?n:fallback;}catch(e){return fallback;}}
 const savedSettings=loadJSON(STORE.settings,{});
 const LANG={
@@ -4547,13 +4548,19 @@ function normalizePlayerAfterLoad(){
   else if(!(player.weaponsUsed instanceof Set)) player.weaponsUsed=new Set(player.weaponsUsed||['gun']);
   player.passives=player.passives||{};
   player.ultimates=player.ultimates||{};
-  player.skills=Array.isArray(player.skills)?player.skills:[];
-  for(let i=0;i<player.skills.length;i++){
-    const s=player.skills[i];
-    if(!s) continue;
-    if(!Number.isFinite(s.t)) s.t=0;
-    if(!Number.isFinite(s.active)) s.active=0;
-  }
+  // [FIX H2] Luôn dựng lại mảng 5 skill chuẩn, giữ t/active từ save nếu hợp lệ.
+  const __NP_DEFAULT_SKILLS=[
+    {name:'TIME FRACTURE',cd:24000,cost:MANA_COST.sk0},
+    {name:'NOVA BURST',cd:30000,cost:MANA_COST.sk1},
+    {name:'PHANTOM RUSH',cd:20000,cost:MANA_COST.sk2},
+    {name:'ORBITAL SHIELD',cd:28000,cost:MANA_COST.sk3},
+    {name:'PLASMA STORM',cd:35000,cost:MANA_COST.sk4}
+  ];
+  const __loadedSkills=Array.isArray(player.skills)?player.skills:[];
+  player.skills=__NP_DEFAULT_SKILLS.map((def,i)=>{
+    const s=(__loadedSkills[i]&&typeof __loadedSkills[i]==='object')?__loadedSkills[i]:{};
+    return {name:def.name,cd:def.cd,cost:def.cost,t:Number.isFinite(s.t)?s.t:0,active:Number.isFinite(s.active)?s.active:0};
+  });
   player.matrixLevel=Number.isFinite(player.matrixLevel)?player.matrixLevel:0;
   player.matrixCd=Number.isFinite(player.matrixCd)?player.matrixCd:0;
   player.matrixCount=Number.isFinite(player.matrixCount)?player.matrixCount:0;
@@ -4579,6 +4586,7 @@ function isValidSavedRunSnapshot(snap){
   if(!Number.isFinite(hp) || hp<=0) return false;
   if(!Number.isFinite(wave) || wave<1) return false;
   if(!scoreOk || !goldOk) return false;
+  if(!Array.isArray(snap.player.skills) || snap.player.skills.length<5) return false;
   return true;
 }
 function updateContinueButton(){
@@ -5191,21 +5199,22 @@ function updatePassiveBoosts(dt){
 function applyOverdriveTempBoost(){
   if(!player || !player._overdriveActive) return null;
   const boost=1+0.2*Math.max(1,player.overdriveLevel);
-  const backup={speed:player.speed,gunRate:player.gunRate,swordRate:player.swordRate,rocketRate:player.rocketRate,railRate:player.railRate};
   player.speed*=boost;
   player.gunRate/=boost;
   player.swordRate/=boost;
   player.rocketRate/=boost;
   player.railRate/=boost;
-  return backup;
+  return {boost};
 }
 function restoreOverdriveTempBoost(backup){
   if(!backup || !player) return;
-  player.speed=backup.speed;
-  player.gunRate=backup.gunRate;
-  player.swordRate=backup.swordRate;
-  player.rocketRate=backup.rocketRate;
-  player.railRate=backup.railRate;
+  const b=backup.boost;
+  if(!Number.isFinite(b) || b<=0) return;
+  player.speed/=b;
+  player.gunRate*=b;
+  player.swordRate*=b;
+  player.rocketRate*=b;
+  player.railRate*=b;
 }
 const __npOriginalFireGun=fireGun;
 fireGun=function(){
