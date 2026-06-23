@@ -1283,6 +1283,8 @@ let mobileCombatScale=1.0;
 let mobileOpacity=0.65;
 
 function updateMobileLayoutVars(viewW, viewH) {
+  // Giữ nguyên công thức combat UI của bản 3.20 để skill/dash/joystick không bị phóng to/lệch.
+  // Chỉ thay nguồn kích thước sang VW/VH đã chuẩn hóa bởi resize core mới.
   const w = Math.max(100, viewW || VW || window.innerWidth || document.documentElement.clientWidth || 1);
   const h = Math.max(100, viewH || VH || window.innerHeight || document.documentElement.clientHeight || 1);
   const aspect = w / h;
@@ -1293,48 +1295,34 @@ function updateMobileLayoutVars(viewW, viewH) {
   if (typeof mobileCombatScale !== 'undefined') {
     baseScale *= mobileCombatScale;
   }
-  // Clamped combat scale – prevents oversized tablet UI
-  // combatScale = Math.min(Math.max(baseScale * 0.9, 0.75), 1.1);
-  let combatScale = Math.min(Math.max(baseScale * 0.9, 0.75), 1.1);
-
+  let combatScale = baseScale;
   let offsetX = 90;
   let offsetY = 90;
   let gap = 24;
-
   if (aspect >= 1.8) {
-    // Ultra-wide phones
+    combatScale = baseScale * 1.0;
     offsetX = 90;
     offsetY = 90;
     document.body.classList.remove('tablet-mode');
   } else if (aspect >= 1.5) {
-    // Standard 16:9 landscape
+    combatScale = baseScale * 0.96;
     offsetX = 70;
     offsetY = 70;
     document.body.classList.remove('tablet-mode');
   } else {
-    // iPad / 4:3 square screens – keep fingers in reach
-    offsetX = 80;
-    offsetY = 80;
-    gap = 22;
+    combatScale = baseScale * 0.85;
+    offsetX = 45;
+    offsetY = 45;
+    gap = 20;
     document.body.classList.add('tablet-mode');
   }
-
-  // Ensure joystick offsets never exceed 80px on square screens
-  if (aspect < 1.5) {
-    offsetX = Math.min(offsetX, 80);
-    offsetY = Math.min(offsetY, 80);
-  }
-
   if (h < 430) {
     offsetY = Math.max(30, offsetY * 0.7);
     gap = Math.max(16, gap * 0.75);
-    combatScale = Math.min(combatScale, 1.1);
+    combatScale = combatScale * 0.95;
   }
-
-  // Final clamp – safe for 90% of devices
-  combatScale = Math.min(Math.max(combatScale, 0.75), 1.1);
-  if (!Number.isFinite(combatScale) || isNaN(combatScale)) combatScale = 0.85;
-
+  combatScale = Math.min(1.25, Math.max(0.42, combatScale));
+  if (!Number.isFinite(combatScale) || isNaN(combatScale)) combatScale = 0.5;
   const doc = document.documentElement;
   doc.style.setProperty('--combat-scale', combatScale.toFixed(4));
   doc.style.setProperty('--joy-offset-x', offsetX.toFixed(1));
