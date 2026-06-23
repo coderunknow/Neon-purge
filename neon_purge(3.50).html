@@ -786,6 +786,30 @@ body.mobile-mode .craft-grid {
   .dbtn.sel{border-color:#e0418a;color:#fff;box-shadow:0 0 18px rgba(224,65,138,.4);transform:translateY(-4px);}
   .btn{pointer-events:auto;cursor:pointer;padding:15px 48px;font-size:17px;font-weight:800;letter-spacing:4px;color:#02010a;background:linear-gradient(90deg,#1fb6c9,#16c98a);border:none;border-radius:8px;text-transform:uppercase;box-shadow:0 0 20px rgba(31,182,201,.5);transition:transform .12s cubic-bezier(.34,1.56,.64,1);}
   .btn:hover{transform:scale(1.08);}.btn:active{transform:scale(.95);}
+  .splashActionRow{display:flex;gap:14px;align-items:center;justify-content:center;flex-wrap:wrap;margin:6px 0 4px;}
+  #continueBtn{display:none;min-width:230px;}
+  #splashStats{width:min(760px,90vw);margin-top:14px;padding:12px 14px 14px;border-radius:14px;background:rgba(15,10,35,.58);border:1px solid rgba(31,182,201,.22);box-shadow:0 0 18px rgba(0,0,0,.22);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);transition:max-height .22s ease,opacity .2s ease,transform .2s ease;}
+  #splashStats.collapsed{max-height:64px;overflow:hidden;opacity:.96;}
+  #splashStats.expanded{max-height:320px;overflow:auto;}
+  #splashStats.hidden{display:none;}
+  .splashStatsHeader{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;}
+  #splashStatsTitle{font-size:13px;letter-spacing:5px;color:#1fb6c9;text-shadow:0 0 8px rgba(31,182,201,.25);}
+  .splashStatsToggle{min-width:44px;padding:6px 10px;border-radius:8px;line-height:1;}
+  #splashStatsBody{display:grid;grid-template-columns:repeat(2,minmax(160px,1fr));gap:8px 14px;text-align:left;font-size:12px;color:#cdd;}
+  #splashStatsBody .row{display:flex;justify-content:space-between;gap:16px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.05);}
+  #splashStatsBody .row b{color:#1fb6c9;}
+  #splashStatsBody .row span{color:#ffd000;font-weight:800;}
+  #splashStatsBody .up{grid-column:1/-1;color:#16c98a;font-size:11px;letter-spacing:1px;line-height:1.5;margin-top:4px;}
+  #tutorialBtn{min-width:230px;border-color:rgba(31,182,201,.45);color:#1fb6c9;background:rgba(15,10,35,.82);}
+  #clearDataBtn{pointer-events:auto;cursor:pointer;}
+  #tutorialPanel{position:absolute;inset:0;z-index:34;display:none;align-items:center;justify-content:center;background:rgba(2,1,10,.68);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:24px;}
+  #tutorialPanel.show{display:flex;}
+  .tutorialBox{width:min(920px,94vw);max-height:min(84vh,860px);overflow:auto;padding:22px 22px 20px;border-radius:18px;background:linear-gradient(160deg,rgba(18,11,38,.98),rgba(8,4,22,.98));border:1.5px solid rgba(31,182,201,.28);box-shadow:0 0 34px rgba(0,0,0,.45);text-align:left;}
+  #tutorialContent{color:#cfe;font-size:13px;line-height:1.72;letter-spacing:0.4px;}
+  #tutorialContent .tSec{margin-bottom:16px;padding:12px 14px;border-radius:12px;background:rgba(15,10,35,.42);border:1px solid rgba(255,255,255,.06);}
+  #tutorialContent .tHead{font-size:15px;font-weight:900;letter-spacing:2px;color:#ffd000;margin-bottom:6px;text-transform:uppercase;}
+  #tutorialContent .tSmall{font-size:11px;color:#8ba0b5;letter-spacing:1px;}
+  #tutorialContent b{color:#1fb6c9;}
   #howto{margin-top:24px;color:#5a6a80;font-size:12px;line-height:1.9;letter-spacing:2px;}#howto b{color:#8c6fd6;}
   #deadStats{color:#cdd;margin:12px 0 22px;font-size:13px;line-height:1.85;letter-spacing:1px;text-align:left;background:rgba(15,10,35,.5);padding:16px 24px;border-radius:12px;border:1px solid rgba(255,255,255,.07);min-width:290px;}
   #deadStats .row{display:flex;justify-content:space-between;gap:28px;}#deadStats span{color:#e0418a;font-weight:800;}#deadStats .up{color:#16c98a;font-size:11px;}
@@ -1222,6 +1246,9 @@ body.mobile-mode .craft-grid {
     <span>MUSIC</span><input id="volSlider" type="range" min="0" max="100" value="45">
     <span>SFX</span><input id="sfxSlider" type="range" min="0" max="100" value="50">
   </div>
+  <div class="audioRow">
+    <button class="togBtn" id="clearDataBtn" style="min-width:260px;border-color:rgba(255,92,92,.55);color:#ff6b8a;background:rgba(40,8,18,.85)">🧹 RESET ALL DATA</button>
+  </div>
   <div id="fpsRow">
     <span style="font-weight:900;letter-spacing:3px;margin-right:4px">FPS CAP</span>
     <button class="togBtn" id="fpsCap30">30</button>
@@ -1259,14 +1286,29 @@ body.mobile-mode .craft-grid {
     <div class="dbtn" data-d="2"><div class="dn ti">HARD</div><div class="dd">No mercy</div></div>
     <div class="dbtn" data-d="3"><div class="dn ti">HELL</div><div class="dd">Insanity</div></div>
   </div>
-  <button class="btn ti" id="startBtn">INITIATE</button>
+  <div class="splashActionRow"><button class="btn ti" id="startBtn">INITIATE</button><button class="btn ti" id="continueBtn">CONTINUE</button></div>
+  <button class="menuBtn" id="tutorialBtn" style="margin-top:10px;border-color:rgba(31,182,201,.45);color:#1fb6c9;min-width:230px">📘 HOW TO PLAY</button>
   <button class="menuBtn" id="deathMenuBtn" style="display:none;margin-top:12px">MAIN MENU</button>
   <button class="menuBtn" id="menuShopBtn" style="margin-top:14px;border-color:rgba(255,208,0,.5);color:#ffd000">💰 SHOP</button>
   <button class="menuBtn" id="menuSettingsBtn" style="margin-top:7px">SETTINGS</button>
   <div id="howto"><b>WASD</b> Move · <b>Mouse</b> Aim · <b>LMB</b> Attack · <b>SPACE</b> Dash<br><b>Q/1/2/3/4</b> Weapon · <b>E/R/F/G</b> Skills · <b>B</b> Shop · <b>ESC</b> Pause</div>
+  <div id="splashStats" class="splashStats collapsed" aria-hidden="true">
+    <div class="splashStatsHeader">
+      <div class="ti neon" id="splashStatsTitle">SESSION SUMMARY</div>
+      <button class="togBtn splashStatsToggle" id="splashStatsToggle" aria-expanded="false">↑</button>
+    </div>
+    <div id="splashStatsBody"></div>
+  </div>
 </div>
 <div class="menuExtra ti">MADE BY BACH</div>
 
+<div id="tutorialPanel" aria-hidden="true">
+  <div class="tutorialBox">
+    <div class="panelTitle ti neon" id="tutorialTitle" style="color:#1fb6c9;margin-bottom:10px">HOW TO PLAY</div>
+    <div id="tutorialContent"></div>
+    <button class="menuBtn" id="tutorialCloseBtn" style="margin-top:18px;min-width:220px">CLOSE</button>
+  </div>
+</div>
 
 <script>
 (() => {
@@ -1294,6 +1336,9 @@ function updateMobileLayoutVars(viewW, viewH) {
   }
   if (typeof mobileCombatScale !== 'undefined') {
     baseScale *= mobileCombatScale;
+  }
+  if (mobileMode) {
+    baseScale *= 0.66; // shrink mobile combat UI to ~2/3 as requested
   }
   let combatScale = baseScale;
   let offsetX = 90;
@@ -1561,7 +1606,7 @@ const LANG={
 };
 let currentLang=(savedSettings.lang==='vi'||savedSettings.lang==='en')?savedSettings.lang:'en';
 function L(k){return (LANG[currentLang]&&LANG[currentLang][k])||(LANG.en&&LANG.en[k])||k;}
-const VI_TEXT={"GOLD":"VÀNG","PERMANENT SHOP":"CỬA HÀNG VĨNH VIỄN","OWNED":"ĐÃ SỞ HỮU","applied every run":"áp dụng mỗi lượt chơi","tap/click to buy":"chạm/click để mua","need":"cần thêm","ARSENAL":"KHO VŨ KHÍ","SURVIVAL":"SINH TỒN","ECONOMY":"KINH TẾ","OFFENSE / UTILITY":"TẤN CÔNG / TIỆN ÍCH","PLAYER STATISTICS":"CHỈ SỐ NGƯỜI CHƠI","TIME":"THỜI GIAN","SCORE":"ĐIỂM","LEVEL":"CẤP","KILLS":"HẠ GỤC","Gold":"Vàng","Gold Earned":"Vàng kiếm được","Wave":"Làn sóng","Weapon":"Vũ khí","Damage":"Sát thương","Speed":"Tốc độ","HP":"Máu","Max HP":"Máu tối đa","Shield":"Giáp","Max Shield":"Giáp tối đa","Crit Chance":"Tỉ lệ chí mạng","Crit Mult":"Bội chí mạng","SPD":"TĐ","Dash Cooldown":"Hồi Dash","Mana":"Năng lượng","Max Mana":"Năng lượng tối đa","Mana Regen/s":"Hồi năng lượng/s","Pierce":"Xuyên","Bounce":"Nảy","Multishot":"Đa đạn","Range":"Tầm","Magnet Range":"Tầm hút","DPS":"DPS","BEST SCORE":"ĐIỂM CAO","ULTIMATE EDITION":"PHIÊN BẢN TỐI THƯỢNG","FINAL EDITION":"PHIÊN BẢN CUỐI","INITIATE":"BẮT ĐẦU","EASY":"DỄ","NORMAL":"THƯỜNG","HARD":"KHÓ","HELL":"ĐỊA NGỤC","Relaxed":"Nhẹ nhàng","Balanced":"Cân bằng","No mercy":"Không khoan nhượng","Insanity":"Điên cuồng","Settings, accessibility and shop/profile progress are saved locally.":"Cài đặt, hỗ trợ tiếp cận và tiến trình shop/hồ sơ được lưu trên máy.","MUSIC OFF":"NHẠC TẮT","MUSIC ON":"NHẠC BẬT","MUSIC READY":"NHẠC SẴN SÀNG","AUTO-FIRE OFF":"TỰ BẮN TẮT","AUTO-FIRE ON":"TỰ BẮN BẬT","MOBILE OFF":"MOBILE TẮT","MOBILE ON":"MOBILE BẬT","SHAKE ON":"RUNG BẬT","SHAKE OFF":"RUNG TẮT","MOTION ON":"CHUYỂN ĐỘNG BẬT","MOTION REDUCED":"GIẢM CHUYỂN ĐỘNG","COLOR":"MÀU","TEXT":"CHỮ","MUSIC":"NHẠC","SFX":"ÂM HIỆU","FPS CAP":"GIỚI HẠN FPS","SELECT A BOON · 1-3":"CHỌN NÂNG CẤP · 1-3","BOSS REWARD · SUPER SKILL":"THƯỞNG BOSS · SIÊU KỸ NĂNG","MAX LEVEL · +EFFECT":"TỐI ĐA · +HIỆU ỨNG","new skill":"kỹ năng mới","upgrade":"nâng cấp","UPGRADE":"NÂNG CẤP","SUPER":"SIÊU CẤP","LVL":"CẤP","NO MATERIALS":"THIẾU NGUYÊN LIỆU","MAX 5":"TỐI ĐA 5","CRAFT":"CHẾ TẠO","Heals player in 200px range, 5 HP/s.":"Hồi máu cho người chơi trong phạm vi 200px, 5 HP/s.","Fires a high-damage laser at nearest enemy. 5s cooldown.":"Bắn laser sát thương cao vào kẻ địch gần nhất. Hồi 5 giây.","Fast low-damage shots at nearby enemies.":"Bắn nhanh sát thương thấp vào kẻ địch gần đó.","Explodes when enemies enter 60px trigger radius.":"Phát nổ khi kẻ địch vào bán kính kích hoạt 60px.","Heal Turret":"Trụ Hồi Máu","Laser Turret":"Trụ Laser","Rapid Turret":"Trụ Bắn Nhanh","Mine":"Mìn","Unlock explosive weapon (key 3)":"Mở khóa vũ khí nổ (phím 3)","Unlock piercing beam weapon (key 4)":"Mở khóa vũ khí tia xuyên (phím 4)","+30 max shield, regenerates slowly":"+30 giáp tối đa, hồi chậm","Double XP orb attraction range":"Gấp đôi tầm hút orb XP","+50 max HP, heal full":"+50 máu tối đa, hồi đầy","+40 max mana, +50% regen":"+40 năng lượng tối đa, +50% hồi","+15% crit chance, +0.5x crit multiplier":"+15% tỉ lệ chí mạng, +0.5x bội chí mạng","+20% movement speed":"+20% tốc độ di chuyển","Revive once with 50% HP on death":"Hồi sinh một lần với 50% máu khi chết","Gain 50% more XP from orbs":"Nhận thêm 50% XP từ orb","Dashing damages enemies on contact":"Dash gây sát thương khi va vào địch","Auto-collect all orbs on screen":"Tự thu thập mọi orb trên màn hình","All skill cooldowns -20%":"Hồi chiêu mọi kỹ năng -20%","10% chance enemies drop double gold":"10% cơ hội địch rơi gấp đôi vàng","Rocket explosions deal +40% damage":"Nổ rocket gây +40% sát thương","Rocket blast radius +35%":"Bán kính nổ rocket +35%","Rockets scatter +3 explosive bomblets":"Rocket tách +3 bom con phát nổ","Railgun beam deals +35% damage":"Tia railgun gây +35% sát thương","Railgun hits +2 extra targets":"Railgun trúng thêm +2 mục tiêu","Railgun beam reaches +40% farther":"Tia railgun xa hơn +40%","+12% chance to fully dodge a hit":"+12% cơ hội né hoàn toàn đòn đánh","Your hits slow enemies":"Đòn đánh của bạn làm chậm kẻ địch","+70% damage to enemies below 25% HP":"+70% sát thương lên địch dưới 25% máu","Plasma Storm deals +35% damage":"Plasma Storm gây +35% sát thương","Plasma Storm wider & longer (+30%)":"Plasma Storm rộng và dài hơn (+30%)","Fire one more projectile per shot.":"Bắn thêm một viên mỗi phát.","Bullets ricochet to a nearby enemy.":"Đạn nảy sang kẻ địch gần đó.","Bullets pass through one extra enemy.":"Đạn xuyên thêm một kẻ địch.","Faster attacks and movement.":"Tấn công và di chuyển nhanh hơn.","Increase all damage.":"Tăng toàn bộ sát thương.","Longer bullet range & wider sword.":"Đạn xa hơn và kiếm rộng hơn.","Lower weapon & skill cooldowns.":"Giảm hồi chiêu vũ khí và kỹ năng.","Add crit chance (x2 damage).":"Tăng tỉ lệ chí mạng (x2 sát thương).","Sword swings 22% faster.":"Kiếm vung nhanh hơn 22%.","Sword reach & arc greatly increased.":"Tăng mạnh tầm với và cung kiếm.","All hits deal +25% bonus damage.":"Mọi đòn đánh gây thêm +25% sát thương.","Hits cause bleeding damage over time.":"Đòn đánh gây chảy máu theo thời gian.","Sword slashes a full circle.":"Kiếm chém tròn 360°.","Hits poison enemies (DoT).":"Đòn đánh đầu độc kẻ địch (DoT).","+25 max mana, faster regen.":"+25 năng lượng tối đa, hồi nhanh hơn.","Drain HP near foes. +10 max hull.":"Hút máu gần kẻ địch. +10 vỏ tàu tối đa.","+25 max hull, heal 25.":"+25 vỏ tàu tối đa, hồi 25.","Enemies drop 50% more gold.":"Kẻ địch rơi thêm 50% vàng.","+20 shield, faster regen.":"+20 giáp, hồi nhanh hơn.","Kills zap nearby enemies for 30% dmg.":"Hạ gục sẽ giật điện địch gần đó bằng 30% sát thương.","Reflect 20% damage back to attackers.":"Phản lại 20% sát thương cho kẻ tấn công.","Moving fast increases damage up to +40%.":"Di chuyển nhanh tăng sát thương tối đa +40%.","Rocket explosions deal +35% damage.":"Nổ rocket gây +35% sát thương.","Rocket blast radius +30%.":"Bán kính nổ rocket +30%.","Rockets scatter +3 explosive bomblets on impact.":"Rocket tách +3 bom con phát nổ khi va chạm.","Railgun beam deals +30% damage.":"Tia railgun gây +30% sát thương.","Railgun hits +2 extra targets per shot.":"Mỗi phát railgun trúng thêm +2 mục tiêu.","Railgun beam reaches +35% farther.":"Tia railgun xa hơn +35%.","Railgun charge time -30%.":"Thời gian nạp railgun -30%.","Railgun beam pierces 2 more enemies.":"Tia railgun xuyên thêm 2 kẻ địch.","+15% critical hit chance.":"+15% tỉ lệ chí mạng.","Chance to fully dodge an incoming hit.":"Có cơ hội né hoàn toàn đòn đánh tới.","Your hits chill enemies, slowing them.":"Đòn đánh làm lạnh và làm chậm kẻ địch.","+60% damage to enemies below 25% HP.":"+60% sát thương lên địch dưới 25% máu.","Dodging a hit restores some hull. Pairs with EVASION.":"Né đòn hồi một ít vỏ tàu. Kết hợp với EVASION.","Plasma Storm deals +30% damage.":"Plasma Storm gây +30% sát thương.","Plasma Storm is wider & longer.":"Plasma Storm rộng và dài hơn.","+3 flat damage reduction per hit.":"Giảm cố định 3 sát thương mỗi đòn.","+15% movement speed.":"+15% tốc độ di chuyển.","+40% pickup magnet range.":"+40% tầm hút vật phẩm.","+25% XP gain from all sources.":"+25% XP từ mọi nguồn.","+50% shield regeneration rate.":"+50% tốc độ hồi giáp.","+15% weapon attack speed.":"+15% tốc độ tấn công vũ khí.","Kills trigger a small area explosion.":"Hạ gục kích hoạt vụ nổ nhỏ theo vùng.","Every 10 kills: +0.1 DMG forever.":"Mỗi 10 kẻ địch bị hạ: +0.1 DMG vĩnh viễn.","Every 5 dashes: +0.05 SPD forever.":"Mỗi 5 lần dash: +0.05 SPD vĩnh viễn.","Every survived wave: +2 Max HP forever.":"Mỗi wave sống sót: +2 máu tối đa vĩnh viễn.","+25 max shield & +8% shield regen per level.":"+25 giáp tối đa & +8% hồi giáp mỗi cấp.","-12% weapon cooldown per level.":"-12% hồi chiêu vũ khí mỗi cấp.","+8% crit chance & +0.25x crit dmg per level.":"+8% tỉ lệ chí mạng & +0.25x sát thương chí mạng mỗi cấp.","+8% dodge chance per level.":"+8% tỉ lệ né mỗi cấp.","+25 max mana & +15% mana regen per level.":"+25 năng lượng tối đa & +15% hồi năng lượng mỗi cấp.","+18% damage & +6% execute threshold per level.":"+18% sát thương & +6% ngưỡng kết liễu mỗi cấp.","+20% XP gain per level.":"+20% XP nhận được mỗi cấp.","+4 flat damage reduction per level.":"+4 giảm sát thương cố định mỗi cấp.","+25% gold drops & +20% pickup range per level.":"+25% vàng rơi & +20% tầm hút mỗi cấp.","+30 chain range & +0.15 chain dmg per level.":"+30 tầm dây chuyền & +0.15 sát thương dây chuyền mỗi cấp.","+15% plasma damage & +10% plasma area per level.":"+15% sát thương plasma & +10% vùng plasma mỗi cấp.","+25% rail damage & +1 rail target per level.":"+25% sát thương rail & +1 mục tiêu rail mỗi cấp.","Get your first kill":"Hạ gục kẻ địch đầu tiên","Reach wave 5":"Đạt wave 5","Reach wave 10":"Đạt wave 10","Kill your first boss":"Hạ boss đầu tiên","Get a 10x combo":"Đạt combo 10x","Earn 100 gold total":"Kiếm tổng 100 vàng","Reach level 10":"Đạt cấp 10","Score 5000 points":"Đạt 5000 điểm","Complete a wave without taking damage":"Hoàn thành wave mà không nhận sát thương","Reach wave 20":"Đạt wave 20","Kill 500 enemies in one run":"Hạ 500 kẻ địch trong một lượt","Score 10000 points":"Đạt 10000 điểm","Use every unlocked weapon in one run":"Dùng mọi vũ khí đã mở trong một lượt","Get a 20x combo":"Đạt combo 20x","MAIN MENU":"MENU CHÍNH","RETRY":"THỬ LẠI","TERMINATED":"ĐÃ BỊ HẠ","SIGNAL LOST":"MẤT TÍN HIỆU","NEW RECORD":"KỶ LỤC MỚI","BOSSES":"BOSS","DMG DEALT":"SÁT THƯƠNG GÂY RA","DMG TAKEN":"SÁT THƯƠNG NHẬN","MAX COMBO":"COMBO CAO NHẤT","DIFFICULTY":"ĐỘ KHÓ","UPGRADES":"NÂNG CẤP","None":"Không có","WEATHER CLEAR":"THỜI TIẾT QUANG ĐÃNG","NEON RAIN":"MƯA NEON","DENSE FOG":"SƯƠNG MÙ DÀY","METEOR STORM":"MƯA THIÊN THẠCH","ION STORM":"BÃO ION","THUNDERSTORM":"MƯA GIÔNG","SNOWFALL":"TUYẾT RƠI","BLIZZARD":"BÃO TUYẾT","ACID RAIN":"MƯA AXIT","EVENT CLEARED":"SỰ KIỆN HOÀN TẤT","ANOMALY":"DỊ THƯỜNG","LOOT RUSH":"CƠN MƯA CHIẾN LỢI PHẨM","FRENZY WAVE":"LÀN SÓNG CUỒNG NỘ","DARK ZONE":"VÙNG TỐI","ELITE SURGE":"ĐỢT ELITE","WEATHER":"THỜI TIẾT","No glow":"Không glow","Light glow":"Glow nhẹ","Full FX":"Hiệu ứng đầy đủ","Max bloom":"Bloom tối đa","NIGHT":"ĐÊM","DAY":"NGÀY","Dodge Chance":"Tỉ lệ né","Armor":"Giáp giảm sát thương","Lifesteal":"Hút máu","Engineer":"Kĩ thuật","Gold Mult":"Hệ số vàng","XP Mult":"Hệ số XP","Thorns":"Phản sát thương","+15% turret efficiency and turret durability.":"+15% hiệu quả và độ bền trụ.","TURRET+":"TRỤ+","Bolt":"Linh kiện B","Screw":"Linh kiện S","Feather":"Linh kiện F","Crystal":"Tinh thể C","Chip":"Chip P","LEFT-HANDED OFF":"TAY TRÁI TẮT","LEFT-HANDED ON":"TAY TRÁI BẬT","SCALE":"TỶ LỆ","OPACITY":"ĐỘ MỜ"};
+const VI_TEXT={"GOLD":"VÀNG","PERMANENT SHOP":"CỬA HÀNG VĨNH VIỄN","OWNED":"ĐÃ SỞ HỮU","applied every run":"áp dụng mỗi lượt chơi","tap/click to buy":"chạm/click để mua","need":"cần thêm","ARSENAL":"KHO VŨ KHÍ","SURVIVAL":"SINH TỒN","ECONOMY":"KINH TẾ","OFFENSE / UTILITY":"TẤN CÔNG / TIỆN ÍCH","PLAYER STATISTICS":"CHỈ SỐ NGƯỜI CHƠI","TIME":"THỜI GIAN","SCORE":"ĐIỂM","LEVEL":"CẤP","KILLS":"HẠ GỤC","Gold":"Vàng","Gold Earned":"Vàng kiếm được","Wave":"Làn sóng","Weapon":"Vũ khí","Damage":"Sát thương","Speed":"Tốc độ","HP":"Máu","Max HP":"Máu tối đa","Shield":"Giáp","Max Shield":"Giáp tối đa","Crit Chance":"Tỉ lệ chí mạng","Crit Mult":"Bội chí mạng","SPD":"TĐ","Dash Cooldown":"Hồi Dash","Mana":"Năng lượng","Max Mana":"Năng lượng tối đa","Mana Regen/s":"Hồi năng lượng/s","Pierce":"Xuyên","Bounce":"Nảy","Multishot":"Đa đạn","Range":"Tầm","Magnet Range":"Tầm hút","DPS":"DPS","BEST SCORE":"ĐIỂM CAO","ULTIMATE EDITION":"PHIÊN BẢN TỐI THƯỢNG","FINAL EDITION":"PHIÊN BẢN CUỐI","INITIATE":"BẮT ĐẦU","CONTINUE":"TIẾP TỤC","HOW TO PLAY":"HƯỚNG DẪN","RESET ALL DATA":"XÓA TOÀN BỘ DỮ LIỆU","SESSION SUMMARY":"TÓM TẮT VẾN CHƠI","CLOSE":"ĐÓNG","EASY":"DỄ","NORMAL":"THƯỜNG","HARD":"KHÓ","HELL":"ĐỊA NGỤC","Relaxed":"Nhẹ nhàng","Balanced":"Cân bằng","No mercy":"Không khoan nhượng","Insanity":"Điên cuồng","Settings, accessibility and shop/profile progress are saved locally.":"Cài đặt, hỗ trợ tiếp cận và tiến trình shop/hồ sơ được lưu trên máy.","MUSIC OFF":"NHẠC TẮT","MUSIC ON":"NHẠC BẬT","MUSIC READY":"NHẠC SẴN SÀNG","AUTO-FIRE OFF":"TỰ BẮN TẮT","AUTO-FIRE ON":"TỰ BẮN BẬT","MOBILE OFF":"MOBILE TẮT","MOBILE ON":"MOBILE BẬT","SHAKE ON":"RUNG BẬT","SHAKE OFF":"RUNG TẮT","MOTION ON":"CHUYỂN ĐỘNG BẬT","MOTION REDUCED":"GIẢM CHUYỂN ĐỘNG","COLOR":"MÀU","TEXT":"CHỮ","MUSIC":"NHẠC","SFX":"ÂM HIỆU","FPS CAP":"GIỚI HẠN FPS","SELECT A BOON · 1-3":"CHỌN NÂNG CẤP · 1-3","BOSS REWARD · SUPER SKILL":"THƯỞNG BOSS · SIÊU KỸ NĂNG","MAX LEVEL · +EFFECT":"TỐI ĐA · +HIỆU ỨNG","new skill":"kỹ năng mới","upgrade":"nâng cấp","UPGRADE":"NÂNG CẤP","SUPER":"SIÊU CẤP","LVL":"CẤP","NO MATERIALS":"THIẾU NGUYÊN LIỆU","MAX 5":"TỐI ĐA 5","CRAFT":"CHẾ TẠO","Heals player in 200px range, 5 HP/s.":"Hồi máu cho người chơi trong phạm vi 200px, 5 HP/s.","Fires a high-damage laser at nearest enemy. 5s cooldown.":"Bắn laser sát thương cao vào kẻ địch gần nhất. Hồi 5 giây.","Fast low-damage shots at nearby enemies.":"Bắn nhanh sát thương thấp vào kẻ địch gần đó.","Explodes when enemies enter 60px trigger radius.":"Phát nổ khi kẻ địch vào bán kính kích hoạt 60px.","Heal Turret":"Trụ Hồi Máu","Laser Turret":"Trụ Laser","Rapid Turret":"Trụ Bắn Nhanh","Mine":"Mìn","Unlock explosive weapon (key 3)":"Mở khóa vũ khí nổ (phím 3)","Unlock piercing beam weapon (key 4)":"Mở khóa vũ khí tia xuyên (phím 4)","+30 max shield, regenerates slowly":"+30 giáp tối đa, hồi chậm","Double XP orb attraction range":"Gấp đôi tầm hút orb XP","+50 max HP, heal full":"+50 máu tối đa, hồi đầy","+40 max mana, +50% regen":"+40 năng lượng tối đa, +50% hồi","+15% crit chance, +0.5x crit multiplier":"+15% tỉ lệ chí mạng, +0.5x bội chí mạng","+20% movement speed":"+20% tốc độ di chuyển","Revive once with 50% HP on death":"Hồi sinh một lần với 50% máu khi chết","Gain 50% more XP from orbs":"Nhận thêm 50% XP từ orb","Dashing damages enemies on contact":"Dash gây sát thương khi va vào địch","Auto-collect all orbs on screen":"Tự thu thập mọi orb trên màn hình","All skill cooldowns -20%":"Hồi chiêu mọi kỹ năng -20%","10% chance enemies drop double gold":"10% cơ hội địch rơi gấp đôi vàng","Rocket explosions deal +40% damage":"Nổ rocket gây +40% sát thương","Rocket blast radius +35%":"Bán kính nổ rocket +35%","Rockets scatter +3 explosive bomblets":"Rocket tách +3 bom con phát nổ","Railgun beam deals +35% damage":"Tia railgun gây +35% sát thương","Railgun hits +2 extra targets":"Railgun trúng thêm +2 mục tiêu","Railgun beam reaches +40% farther":"Tia railgun xa hơn +40%","+12% chance to fully dodge a hit":"+12% cơ hội né hoàn toàn đòn đánh","Your hits slow enemies":"Đòn đánh của bạn làm chậm kẻ địch","+70% damage to enemies below 25% HP":"+70% sát thương lên địch dưới 25% máu","Plasma Storm deals +35% damage":"Plasma Storm gây +35% sát thương","Plasma Storm wider & longer (+30%)":"Plasma Storm rộng và dài hơn (+30%)","Fire one more projectile per shot.":"Bắn thêm một viên mỗi phát.","Bullets ricochet to a nearby enemy.":"Đạn nảy sang kẻ địch gần đó.","Bullets pass through one extra enemy.":"Đạn xuyên thêm một kẻ địch.","Faster attacks and movement.":"Tấn công và di chuyển nhanh hơn.","Increase all damage.":"Tăng toàn bộ sát thương.","Longer bullet range & wider sword.":"Đạn xa hơn và kiếm rộng hơn.","Lower weapon & skill cooldowns.":"Giảm hồi chiêu vũ khí và kỹ năng.","Add crit chance (x2 damage).":"Tăng tỉ lệ chí mạng (x2 sát thương).","Sword swings 22% faster.":"Kiếm vung nhanh hơn 22%.","Sword reach & arc greatly increased.":"Tăng mạnh tầm với và cung kiếm.","All hits deal +25% bonus damage.":"Mọi đòn đánh gây thêm +25% sát thương.","Hits cause bleeding damage over time.":"Đòn đánh gây chảy máu theo thời gian.","Sword slashes a full circle.":"Kiếm chém tròn 360°.","Hits poison enemies (DoT).":"Đòn đánh đầu độc kẻ địch (DoT).","+25 max mana, faster regen.":"+25 năng lượng tối đa, hồi nhanh hơn.","Drain HP near foes. +10 max hull.":"Hút máu gần kẻ địch. +10 vỏ tàu tối đa.","+25 max hull, heal 25.":"+25 vỏ tàu tối đa, hồi 25.","Enemies drop 50% more gold.":"Kẻ địch rơi thêm 50% vàng.","+20 shield, faster regen.":"+20 giáp, hồi nhanh hơn.","Kills zap nearby enemies for 30% dmg.":"Hạ gục sẽ giật điện địch gần đó bằng 30% sát thương.","Reflect 20% damage back to attackers.":"Phản lại 20% sát thương cho kẻ tấn công.","Moving fast increases damage up to +40%.":"Di chuyển nhanh tăng sát thương tối đa +40%.","Rocket explosions deal +35% damage.":"Nổ rocket gây +35% sát thương.","Rocket blast radius +30%.":"Bán kính nổ rocket +30%.","Rockets scatter +3 explosive bomblets on impact.":"Rocket tách +3 bom con phát nổ khi va chạm.","Railgun beam deals +30% damage.":"Tia railgun gây +30% sát thương.","Railgun hits +2 extra targets per shot.":"Mỗi phát railgun trúng thêm +2 mục tiêu.","Railgun beam reaches +35% farther.":"Tia railgun xa hơn +35%.","Railgun charge time -30%.":"Thời gian nạp railgun -30%.","Railgun beam pierces 2 more enemies.":"Tia railgun xuyên thêm 2 kẻ địch.","+15% critical hit chance.":"+15% tỉ lệ chí mạng.","Chance to fully dodge an incoming hit.":"Có cơ hội né hoàn toàn đòn đánh tới.","Your hits chill enemies, slowing them.":"Đòn đánh làm lạnh và làm chậm kẻ địch.","+60% damage to enemies below 25% HP.":"+60% sát thương lên địch dưới 25% máu.","Dodging a hit restores some hull. Pairs with EVASION.":"Né đòn hồi một ít vỏ tàu. Kết hợp với EVASION.","Plasma Storm deals +30% damage.":"Plasma Storm gây +30% sát thương.","Plasma Storm is wider & longer.":"Plasma Storm rộng và dài hơn.","+3 flat damage reduction per hit.":"Giảm cố định 3 sát thương mỗi đòn.","+15% movement speed.":"+15% tốc độ di chuyển.","+40% pickup magnet range.":"+40% tầm hút vật phẩm.","+25% XP gain from all sources.":"+25% XP từ mọi nguồn.","+50% shield regeneration rate.":"+50% tốc độ hồi giáp.","+15% weapon attack speed.":"+15% tốc độ tấn công vũ khí.","Kills trigger a small area explosion.":"Hạ gục kích hoạt vụ nổ nhỏ theo vùng.","Every 10 kills: +0.1 DMG forever.":"Mỗi 10 kẻ địch bị hạ: +0.1 DMG vĩnh viễn.","Every 5 dashes: +0.05 SPD forever.":"Mỗi 5 lần dash: +0.05 SPD vĩnh viễn.","Every survived wave: +2 Max HP forever.":"Mỗi wave sống sót: +2 máu tối đa vĩnh viễn.","+25 max shield & +8% shield regen per level.":"+25 giáp tối đa & +8% hồi giáp mỗi cấp.","-12% weapon cooldown per level.":"-12% hồi chiêu vũ khí mỗi cấp.","+8% crit chance & +0.25x crit dmg per level.":"+8% tỉ lệ chí mạng & +0.25x sát thương chí mạng mỗi cấp.","+8% dodge chance per level.":"+8% tỉ lệ né mỗi cấp.","+25 max mana & +15% mana regen per level.":"+25 năng lượng tối đa & +15% hồi năng lượng mỗi cấp.","+18% damage & +6% execute threshold per level.":"+18% sát thương & +6% ngưỡng kết liễu mỗi cấp.","+20% XP gain per level.":"+20% XP nhận được mỗi cấp.","+4 flat damage reduction per level.":"+4 giảm sát thương cố định mỗi cấp.","+25% gold drops & +20% pickup range per level.":"+25% vàng rơi & +20% tầm hút mỗi cấp.","+30 chain range & +0.15 chain dmg per level.":"+30 tầm dây chuyền & +0.15 sát thương dây chuyền mỗi cấp.","+15% plasma damage & +10% plasma area per level.":"+15% sát thương plasma & +10% vùng plasma mỗi cấp.","+25% rail damage & +1 rail target per level.":"+25% sát thương rail & +1 mục tiêu rail mỗi cấp.","Get your first kill":"Hạ gục kẻ địch đầu tiên","Reach wave 5":"Đạt wave 5","Reach wave 10":"Đạt wave 10","Kill your first boss":"Hạ boss đầu tiên","Get a 10x combo":"Đạt combo 10x","Earn 100 gold total":"Kiếm tổng 100 vàng","Reach level 10":"Đạt cấp 10","Score 5000 points":"Đạt 5000 điểm","Complete a wave without taking damage":"Hoàn thành wave mà không nhận sát thương","Reach wave 20":"Đạt wave 20","Kill 500 enemies in one run":"Hạ 500 kẻ địch trong một lượt","Score 10000 points":"Đạt 10000 điểm","Use every unlocked weapon in one run":"Dùng mọi vũ khí đã mở trong một lượt","Get a 20x combo":"Đạt combo 20x","MAIN MENU":"MENU CHÍNH","RETRY":"THỬ LẠI","TERMINATED":"ĐÃ BỊ HẠ","SIGNAL LOST":"MẤT TÍN HIỆU","NEW RECORD":"KỶ LỤC MỚI","BOSSES":"BOSS","DMG DEALT":"SÁT THƯƠNG GÂY RA","DMG TAKEN":"SÁT THƯƠNG NHẬN","MAX COMBO":"COMBO CAO NHẤT","DIFFICULTY":"ĐỘ KHÓ","UPGRADES":"NÂNG CẤP","None":"Không có","WEATHER CLEAR":"THỜI TIẾT QUANG ĐÃNG","NEON RAIN":"MƯA NEON","DENSE FOG":"SƯƠNG MÙ DÀY","METEOR STORM":"MƯA THIÊN THẠCH","ION STORM":"BÃO ION","THUNDERSTORM":"MƯA GIÔNG","SNOWFALL":"TUYẾT RƠI","BLIZZARD":"BÃO TUYẾT","ACID RAIN":"MƯA AXIT","EVENT CLEARED":"SỰ KIỆN HOÀN TẤT","ANOMALY":"DỊ THƯỜNG","LOOT RUSH":"CƠN MƯA CHIẾN LỢI PHẨM","FRENZY WAVE":"LÀN SÓNG CUỒNG NỘ","DARK ZONE":"VÙNG TỐI","ELITE SURGE":"ĐỢT ELITE","WEATHER":"THỜI TIẾT","No glow":"Không glow","Light glow":"Glow nhẹ","Full FX":"Hiệu ứng đầy đủ","Max bloom":"Bloom tối đa","NIGHT":"ĐÊM","DAY":"NGÀY","Dodge Chance":"Tỉ lệ né","Armor":"Giáp giảm sát thương","Lifesteal":"Hút máu","Engineer":"Kĩ thuật","Gold Mult":"Hệ số vàng","XP Mult":"Hệ số XP","Thorns":"Phản sát thương","+15% turret efficiency and turret durability.":"+15% hiệu quả và độ bền trụ.","TURRET+":"TRỤ+","Bolt":"Linh kiện B","Screw":"Linh kiện S","Feather":"Linh kiện F","Crystal":"Tinh thể C","Chip":"Chip P","LEFT-HANDED OFF":"TAY TRÁI TẮT","LEFT-HANDED ON":"TAY TRÁI BẬT","SCALE":"TỶ LỆ","OPACITY":"ĐỘ MỜ"};
 function TT(s){if(currentLang!=='vi'||s==null)return s;return VI_TEXT[s]||s;}
 function trGameplayText(txt){if(currentLang!=='vi'||typeof txt!=='string')return txt;return txt.replace(/NOT ENOUGH GOLD/g,L('NOT_ENOUGH_GOLD')).replace(/NO MANA/g,L('NO_MANA')).replace(/REROLLED/g,L('REROLLED')).replace(/READY/g,L('READY')).replace(/WAVE/g,L('WAVE')).replace(/NO MATERIALS/g,TT('NO MATERIALS')).replace(/MAX 5/g,TT('MAX 5'));}
 function applyLang(){
@@ -1579,9 +1624,15 @@ function applyLang(){
   const langBtn=document.getElementById('langToggle');if(langBtn){langBtn.textContent='🌐 '+currentLang.toUpperCase();langBtn.classList.toggle('on',currentLang==='vi');}
   const mcraft=document.getElementById('mCraft');if(mcraft)mcraft.textContent=currentLang==='vi'?'CHẾ':'CRAFT';
   const startBtn=document.getElementById('startBtn');if(startBtn)startBtn.textContent=TT('INITIATE');
+  const contBtn=document.getElementById('continueBtn');if(contBtn)contBtn.textContent=TT('CONTINUE');
+  const tutBtn=document.getElementById('tutorialBtn');if(tutBtn)tutBtn.textContent='📘 '+TT('HOW TO PLAY');
+  const clearBtn=document.getElementById('clearDataBtn');if(clearBtn)clearBtn.textContent=TT('RESET ALL DATA');
   const sub=document.getElementById('subtitle');if(sub){const base=/FINAL|CUỐI/i.test(sub.textContent)?'FINAL EDITION':'ULTIMATE EDITION';sub.textContent=TT(base);}
   const ms=document.getElementById('menuSettingsBtn');if(ms)ms.textContent=L('SETTINGS');const msh=document.getElementById('menuShopBtn');if(msh)msh.textContent='💰 '+L('SHOP');
   const sh=document.querySelector('.settingHint');if(sh)sh.textContent=TT('Settings, accessibility and shop/profile progress are saved locally.');
+  const sTitle=document.getElementById('splashStatsTitle');if(sTitle)sTitle.textContent=TT('SESSION SUMMARY');
+  const tClose=document.getElementById('tutorialCloseBtn');if(tClose)tClose.textContent=L('CLOSE');
+  renderTutorialPanel();
   const audioSpans = document.querySelectorAll('.audioRow span');
   if (audioSpans[0]) audioSpans[0].textContent = currentLang === 'vi' ? 'NHẠC' : 'MUSIC';
   if (audioSpans[1]) audioSpans[1].textContent = currentLang === 'vi' ? 'ÂM HIỆU' : 'SFX';
@@ -1814,8 +1865,9 @@ const SHOP_ITEMS=[
 ];
 let shopOwned=loadJSON(STORE.shop,{});
 let _profileSaveTimer=0;
-function saveProfile(){saveJSON(STORE.shop,shopOwned);try{localStorage.setItem(STORE.gold,String(Math.max(0,Math.floor(gold))));localStorage.setItem(STORE.highscore,String(highScore));}catch(e){}saveJSON(STORE.achieve,achievements);}
-function saveProfileSoon(){clearTimeout(_profileSaveTimer);_profileSaveTimer=setTimeout(saveProfile,220);}
+let __npSuppressAutoSave=false; // [FIX] block unload/pagehide re-saving during hard reset
+function saveProfile(){if(__npSuppressAutoSave) return;saveJSON(STORE.shop,shopOwned);try{localStorage.setItem(STORE.gold,String(Math.max(0,Math.floor(gold))));localStorage.setItem(STORE.highscore,String(highScore));}catch(e){}saveJSON(STORE.achieve,achievements);}
+function saveProfileSoon(){clearTimeout(_profileSaveTimer);if(__npSuppressAutoSave) return;_profileSaveTimer=setTimeout(saveProfile,220);}
 function addGold(amount){amount=Math.max(0,Math.round(amount||0));if(!amount)return;gold+=amount;if(stats)stats.goldEarned+=amount;saveProfileSoon();}
 function spendGold(amount){amount=Math.max(0,Math.round(amount||0));if(gold<amount)return false;gold-=amount;saveProfileSoon();return true;}
 function applyOwnedShopToPlayer(){if(!player)return;for(const item of SHOP_ITEMS){if(shopOwned[item.id])item.apply(player);}capPlayerStats();player.hp=min(player.hp,player.maxHp);player.mana=min(player.mana,player.maxMana);}
@@ -2050,7 +2102,7 @@ function syncMobileUI(){
 function setMobileMode(on){mobileMode=!!on;syncMobileUI();resize();if(!mobileMode){mobileInput.moveX=mobileInput.moveY=0;mobileInput.aimActive=false;mobileInput.fire=false;}}
 syncMobileUI();
 
-function saveSettings(){saveJSON(STORE.settings,{gfx:GFX,shake:screenShakeEnabled,reduceMotion,colorIntensity,textScale,vol,sfxVol,autoFire,musicWanted,mobileMode,mobileLowPerf,fpsCap,lang:currentLang,leftHanded,mobileCombatScale,mobileOpacity});}
+function saveSettings(){if(__npSuppressAutoSave) return;saveJSON(STORE.settings,{gfx:GFX,shake:screenShakeEnabled,reduceMotion,colorIntensity,textScale,vol,sfxVol,autoFire,musicWanted,mobileMode,mobileLowPerf,fpsCap,lang:currentLang,leftHanded,mobileCombatScale,mobileOpacity});}
 function setFpsCap(v){
   fpsCap=[30,60,90,120].includes(v)?v:60;
   lastRenderTs=0;
@@ -2295,6 +2347,10 @@ const motionToggle=document.getElementById('motionToggle');if(motionToggle)motio
 const colorToggle=document.getElementById('colorToggle');if(colorToggle)colorToggle.onclick=()=>{colorIntensity=colorIntensity>=1.2?0.8:(colorIntensity>=1?1.2:1);applySettingsVisuals();updateSettingsButtons();applyLang();saveSettings();};
 const textToggle=document.getElementById('textToggle');if(textToggle)textToggle.onclick=()=>{textScale=textScale>=1.2?0.9:(textScale>=1?1.2:1);applySettingsVisuals();updateSettingsButtons();applyLang();saveSettings();};
 const langToggle=document.getElementById('langToggle');if(langToggle)langToggle.onclick=()=>{currentLang=currentLang==='en'?'vi':'en';applyLang();updateSettingsButtons();saveSettings();};
+const tutorialBtn=document.getElementById('tutorialBtn');if(tutorialBtn)tutorialBtn.onclick=()=>openTutorial();
+const tutorialCloseBtn=document.getElementById('tutorialCloseBtn');if(tutorialCloseBtn)tutorialCloseBtn.onclick=()=>closeTutorial();
+const splashStatsToggle=document.getElementById('splashStatsToggle');if(splashStatsToggle)splashStatsToggle.onclick=()=>toggleSplashStats();
+const clearDataBtn=document.getElementById('clearDataBtn');if(clearDataBtn)clearDataBtn.onclick=()=>clearAllGameData();
 document.getElementById('volSlider').oninput=e=>{vol=e.target.value/100;if(musicEl)musicEl.volume=vol;saveSettings();};
 document.getElementById('sfxSlider').oninput=e=>{sfxVol=e.target.value/100;if(sfxGain)sfxGain.gain.value=sfxVol;saveSettings();};
 
@@ -2350,9 +2406,9 @@ function pauseGame(){state='paused';mouse.down=false;resetInput();const s=Math.f
       <div><b>${TT('GOLD')}:</b> ${gold}</div>
     `;
   }
-  document.getElementById('pause').classList.add('show');syncMobileUI();}
+  saveRunState();document.getElementById('pause').classList.add('show');syncMobileUI();}
 function resumeGame(){document.getElementById('pause').classList.remove('show');document.getElementById('settings').classList.remove('show');document.getElementById('shopPanel').classList.remove('show');document.getElementById('craftPanel').classList.remove('show');document.getElementById('statPanel').classList.remove('show');resetInput();state='playing';last=performance.now();syncMobileUI();}
-function backToMenu(){state='menu';saveProfile();resetInput();document.getElementById('pause').classList.remove('show');document.getElementById('settings').classList.remove('show');document.getElementById('shopPanel').classList.remove('show');document.getElementById('craftPanel').classList.remove('show');document.getElementById('statPanel').classList.remove('show');document.getElementById('splash').classList.remove('hide');document.getElementById('splash').classList.remove('behind');document.getElementById('diff').style.display='flex';document.getElementById('title').textContent='NEON PURGE';document.getElementById('title').style.animation='';document.getElementById('subtitle').textContent=TT('FINAL EDITION');document.getElementById('startBtn').textContent=TT('INITIATE');const dmb=document.getElementById('deathMenuBtn');if(dmb)dmb.style.display='none';const msb=document.getElementById('menuShopBtn');if(msb)msb.style.display='inline-block';const mst=document.getElementById('menuSettingsBtn');if(mst)mst.style.display='inline-block';updateHighscoreDisplay();refreshHowto();syncMobileUI();document.getElementById('bossBar').classList.remove('show');const mm=document.getElementById('minimap');if(mm)mm.style.display='none';}
+function backToMenu(){if(state==='playing'||state==='paused')saveRunState();else if(state==='dead')clearRunSave();state='menu';saveProfile();resetInput();document.getElementById('pause').classList.remove('show');document.getElementById('settings').classList.remove('show');document.getElementById('shopPanel').classList.remove('show');document.getElementById('craftPanel').classList.remove('show');document.getElementById('statPanel').classList.remove('show');closeTutorial();hideSplashStatsPanel();document.getElementById('splash').classList.remove('hide');document.getElementById('splash').classList.remove('behind');document.getElementById('diff').style.display='flex';document.getElementById('title').textContent='NEON PURGE';document.getElementById('title').style.animation='';document.getElementById('subtitle').textContent=TT('FINAL EDITION');document.getElementById('startBtn').textContent=TT('INITIATE');const dmb=document.getElementById('deathMenuBtn');if(dmb)dmb.style.display='none';const msb=document.getElementById('menuShopBtn');if(msb)msb.style.display='inline-block';const mst=document.getElementById('menuSettingsBtn');if(mst)mst.style.display='inline-block';updateHighscoreDisplay();refreshHowto();syncMobileUI();document.getElementById('bossBar').classList.remove('show');const mm=document.getElementById('minimap');if(mm)mm.style.display='none';}
 
 function burst(x,y,color,count,spd=5,life=40){
   if(reduceMotion)count*=0.5;
@@ -2673,6 +2729,11 @@ const POOL=[
   {id:'grind_dmg',ico:'🔥',nm:'KILL STREAK DMG',col:'#ffd000',tag:'PASSIVE',ds:'Every 10 kills: +0.1 DMG forever.',maxLevel:1,infinite:true,apply:(p,s)=>{p.passives=p.passives||{};p.passives.grind_dmg=true;}},
   {id:'grind_spd',ico:'💨',nm:'MOMENTUM',col:'#16c98a',tag:'PASSIVE',ds:'Every 5 dashes: +0.05 SPD forever.',maxLevel:1,infinite:true,apply:(p,s)=>{p.passives=p.passives||{};p.passives.grind_spd=true;}},
   {id:'grind_hp',ico:'✚',nm:'BATTLE HARDENED',col:'#e0418a',tag:'PASSIVE',ds:'Every survived wave: +2 Max HP forever.',maxLevel:1,infinite:true,apply:(p,s)=>{p.passives=p.passives||{};p.passives.grind_hp=true;}},
+
+  {id:'math_matrix',ico:'∑',nm:'MATH MATRIX',col:'#ffd000',tag:'AUTO SHOT',ds:'Every 5s, auto-scan and fire at the densest nearby cluster. Lv1: 1 shot, Lv3: 3 shots, Lv5: 5 shots.',maxLevel:5,apply:(p,s)=>{p.matrixLevel=(p.matrixLevel||0)+1;p.matrixCd=0;}},
+  {id:'parasitic_magnet',ico:'☣',nm:'PARASITIC MAGNET',col:'#16c98a',tag:'ZOMBIE PULSE',ds:'Nearby enemies can be parasitically infected, pulled together and detonated. Higher levels boost range, duration and blast.',maxLevel:3,apply:(p,s)=>{p.parasiticLevel=(p.parasiticLevel||0)+1;p.parasiticCd=0;}},
+  {id:'target_ricochet',ico:'➲',nm:'TARGET RICOCHET',col:'#8dfcff',tag:'LOCK & POP',ds:'Gun shots have a growing chance to retarget dense clusters and explode. Higher levels increase chance and blast radius.',maxLevel:5,apply:(p,s)=>{p.ricochetLevel=(p.ricochetLevel||0)+1;}},
+  {id:'overdrive_core',ico:'⚡',nm:'OVERDRIVE CORE',col:'#ff7b00',tag:'FULL MANA+',ds:'When mana is full: +20% move and attack speed per level (up to +60%).',maxLevel:3,apply:(p,s)=>{p.overdriveLevel=(p.overdriveLevel||0)+1;}},
 ];
 
 function pct(v){return Math.round(v*100)+'%';}
@@ -2699,6 +2760,10 @@ function upgradePreviewText(u,p,stk){if(!u||!p)return'';const d=dim(stk||0);cons
     case 'chain':return `CHAIN: ${p.chainRange||0}px → ${(p.chainRange||0)+120}px`;
     case 'thorns':return `THORNS: ${pct(p.thorns||0)} → ${pct((p.thorns||0)+0.2)}`;
     case 'momentum':return `MOVE DMG: ${pct(p.momentum||0)} → ${pct((p.momentum||0)+0.4)}`;
+    case 'math_matrix':return `AUTO SHOTS: ${p.matrixLevel||0} · CD: ${Math.max(0,Math.round((p.matrixCd||0)/100)/10)}s`;
+    case 'parasitic_magnet':return `INFECT: ${p.parasiticLevel||0} · RANGE: ${180+(p.parasiticLevel||0)*30}px`;
+    case 'target_ricochet':return `RICOCHET: ${pct(p.ricochetChance||0.25)} chance · EXPLODE ON HIT`;
+    case 'overdrive_core':return `FULL MANA BOOST: x${(1+0.2*Math.max(1,p.overdriveLevel||0)).toFixed(1)} speed`;
     case 'rocket_warhead':return `ROCKET DMG: ${(p.rocketDmgMul||1).toFixed(2)}x → ${((p.rocketDmgMul||1)*(1+0.35*d)).toFixed(2)}x`;
     case 'rocket_blast':return `ROCKET AREA: ${(p.rocketRadiusMul||1).toFixed(2)}x → ${((p.rocketRadiusMul||1)*(1+0.3*d)).toFixed(2)}x`;
     case 'rocket_cluster':return `CLUSTER: ${p.rocketCluster||0} → ${(p.rocketCluster||0)+3}`;
@@ -3645,8 +3710,9 @@ function killEnemy(idx){const e=enemies[idx];if(!e||e.dead)return;e.dead=true;e.
   e.dead=true;e.hp=0;}
 
 function die(){state='dead';mouse.down=false;resetInput();syncMobileUI();burst(player.x,player.y,'#e0418a',50,10,80);shake(20);cutscene=null;slowmo=1;zoom=1;
-  // Save highscore
+  // Save highscore, then clear continue so a dead run can never be resumed.
   const newRecord=score>highScore;if(newRecord){highScore=score;}saveProfile();
+  clearRunSave();
   const upsParts=[];
   upsParts.push(...Object.entries(stats.upgrades||{}).map(([k,v])=>{const u=[...POOL,...BOSS_SKILL_POOL].find(x=>x.id===k);return u?`${u.nm} x${v}`:k;}));
   upsParts.push(...Object.entries(stats.bossSkillUpgrades||{}).map(([k,v])=>{const u=BOSS_SKILL_POOL.find(x=>x.id===k);return u?`★ ${u.nm} x${v}`:k;}));
@@ -3657,13 +3723,12 @@ function die(){state='dead';mouse.down=false;resetInput();syncMobileUI();burst(p
   document.getElementById('title').textContent=TT('TERMINATED');
   document.getElementById('title').style.animation='deathGlitch 0.3s ease 3';document.getElementById('subtitle').textContent=TT('SIGNAL LOST');document.getElementById('diff').style.display='none';
   updateHighscoreDisplay(newRecord?' ★ '+TT('NEW RECORD')+'!':'');
-  document.getElementById('howto').innerHTML=`<div id="deadStats">
-    <div class="row"><b>${TT('SCORE')}</b><span>${score}</span></div><div class="row"><b>${L('WAVE')}</b><span>${waveNum}</span></div>
+  updateSplashStatsPanel(`<div class="row"><b>${TT('SCORE')}</b><span>${score}</span></div><div class="row"><b>${L('WAVE')}</b><span>${waveNum}</span></div>
     <div class="row"><b>${TT('TIME')}</b><span>${tm}</span></div><div class="row"><b>${TT('LEVEL')}</b><span>${player.level}</span></div>
     <div class="row"><b>${TT('KILLS')}</b><span>${stats.kills}</span></div><div class="row"><b>${TT('BOSSES')}</b><span>${stats.bossKills}</span></div>
     <div class="row"><b>${TT('DMG DEALT')}</b><span>${Math.round(stats.dmgDealt)}</span></div><div class="row"><b>${TT('DMG TAKEN')}</b><span>${Math.round(stats.dmgTaken)}</span></div>
     <div class="row"><b>${TT('Gold Earned')}</b><span>${stats.goldEarned}</span></div><div class="row"><b>${TT('MAX COMBO')}</b><span>${stats.maxCombo}</span></div>
-    <div class="row"><b>${TT('DIFFICULTY')}</b><span>${TT(DIFF[difficulty].name)}</span></div><div class="up" style="margin-top:10px">${TT('UPGRADES')}: ${ups==='None'?TT('None'):ups}</div></div>`;
+    <div class="row"><b>${TT('DIFFICULTY')}</b><span>${TT(DIFF[difficulty].name)}</span></div><div class="up">${TT('UPGRADES')}: ${ups==='None'?TT('None'):ups}</div>`, false);
   document.getElementById('startBtn').textContent=TT('RETRY');const dmb=document.getElementById('deathMenuBtn');if(dmb)dmb.style.display='inline-block';const msb=document.getElementById('menuShopBtn');if(msb)msb.style.display='none';const mst=document.getElementById('menuSettingsBtn');if(mst)mst.style.display='none';}
 
 const stars=[];for(let i=0;i<160;i++)stars.push({x:Math.random(),y:Math.random(),z:rand(0.2,1),c:['#e0418a','#1fb6c9','#8c6fd6','#fff'][randi(0,4)]});
@@ -3679,12 +3744,78 @@ function renderBG(){bgt+=0.016;
   for(const s of stars){const px=((s.x+bgt*0.01*s.z)%1)*VW;const py=s.y*VH*0.6;bgx.globalAlpha=0.4+0.5*Math.sin(bgt*2+s.x*30)*s.z;
     bgx.fillStyle=s.c;bgx.fillRect(px,py,2*s.z+0.5,2*s.z+0.5);}
   bgx.globalAlpha=1;
-  bgx.strokeStyle='rgba(224,65,138,0.35)';bgx.lineWidth=1;const horizon=VH*0.6;
-  for(let i=0;i<=20;i++){const xx=(i/20)*VW;bgx.beginPath();bgx.moveTo(xx,horizon);bgx.lineTo(VW/2+(xx-VW/2)*6,VH);bgx.stroke();}
-  for(let i=0;i<14;i++){const t=((i+(bgt*0.5)%1)/14);const yy=horizon+(VH-horizon)*t*t;bgx.globalAlpha=1-t*0.5;bgx.strokeStyle='rgba(31,182,201,0.4)';bgx.beginPath();bgx.moveTo(0,yy);bgx.lineTo(VW,yy);bgx.stroke();}
+  const horizon=VH*0.6;
+  const snap=v=>Math.round(v)+0.5;
+  const clampTop=y=>Math.max(0,Math.min(VH,y));
+
+  // Biến các sọc nền thành grid bậc thang xéo lên, giảm cảm giác sọc thô/moiré.
+  bgx.save();
+  bgx.lineCap='round';
+  bgx.lineJoin='round';
+  bgx.shadowBlur=10;
+  bgx.shadowColor='rgba(31,182,201,0.14)';
+  bgx.strokeStyle='rgba(31,182,201,0.10)';
+  for(let i=0;i<16;i++){
+    const depth=i/15;
+    const stepW=30+depth*24;
+    const stepH=6+depth*10;
+    const baseY=horizon+depth*(VH-horizon)*0.92;
+    const yJitter=Math.sin((bgt*0.0025)+i*0.55)*4;
+    const alpha=0.08+depth*0.18;
+    bgx.globalAlpha=alpha;
+    bgx.beginPath();
+    let x=-stepW;
+    let y=clampTop(baseY+yJitter);
+    bgx.moveTo(snap(x),snap(y));
+    while(x<VW+stepW){
+      const nx=Math.min(x+stepW,VW+stepW);
+      bgx.lineTo(snap(nx),snap(y));
+      y=clampTop(y-stepH);
+      bgx.lineTo(snap(nx),snap(y));
+      x=nx;
+    }
+    bgx.stroke();
+  }
+
+  // Các đường giao cắt nhẹ để giữ cảm giác "lưới" nhưng vẫn đi theo bậc thang.
+  bgx.shadowBlur=0;
+  bgx.lineWidth=1;
+  for(let i=0;i<11;i++){
+    const t=i/10;
+    const x0=-VW*0.12+t*VW*1.12;
+    const y0=horizon+20+t*(VH-horizon)*0.72;
+    const dx=VW*0.55;
+    const dy=-(VH-horizon)*0.25;
+    const stepW=28+18*t;
+    const stepH=8+10*t;
+    bgx.globalAlpha=0.06+0.10*t;
+    bgx.strokeStyle='rgba(224,65,138,0.13)';
+    bgx.beginPath();
+    let x=x0, y=y0;
+    bgx.moveTo(snap(x),snap(y));
+    while(x<VW+60){
+      const nx=x+stepW;
+      bgx.lineTo(snap(nx),snap(y));
+      y=clampTop(y+dy*(stepW/dx) - stepH*0.12);
+      bgx.lineTo(snap(nx),snap(y));
+      x=nx;
+    }
+    bgx.stroke();
+  }
+
+  // Dải sóng scanline mềm ở phần trên để giữ chất neon nhưng không tạo vệt sọc cứng.
+  bgx.globalAlpha=0.55;
+  bgx.strokeStyle='rgba(224,65,138,0.12)';
+  for(let i=0;i<12;i++){
+    const yy=snap(horizon-28+i*6+Math.sin((bgt*0.003)+i)*1.2);
+    bgx.beginPath();
+    bgx.moveTo(0,yy);
+    bgx.lineTo(VW,yy);
+    bgx.stroke();
+  }
+
   bgx.globalAlpha=1;bgx.globalCompositeOperation='source-over';
 }
-
 /* ============================== RENDER ============================== */
 function drawEnvDecor(){if(GFX<2||lowQuality)return;
   // Ambient floating particles in world
@@ -3699,10 +3830,10 @@ function drawEnvDecor(){if(GFX<2||lowQuality)return;
     ctx.fillRect(sx,sy,2,2);
   }
   ctx.globalAlpha=1;ctx.globalCompositeOperation='source-over';}
-function drawGrid(){if(lowQuality)return;const g=64;ctx.strokeStyle=bossActive?'rgba(140,30,30,0.10)':'rgba(70,35,140,0.10)';ctx.lineWidth=1;ctx.beginPath();
+function drawGrid(){if(lowQuality)return;const g=64,snap=v=>Math.round(v)+0.5;ctx.strokeStyle=bossActive?'rgba(140,30,30,0.10)':'rgba(70,35,140,0.10)';ctx.lineWidth=1;ctx.beginPath();
   const startX=Math.floor((cam.x-VW/2/zoom)/g)*g,startY=Math.floor((cam.y-VH/2/zoom)/g)*g;
-  for(let x=startX;x<cam.x+VW/2/zoom;x+=g){const sx=w2sx(x);ctx.moveTo(sx,0);ctx.lineTo(sx,VH);}
-  for(let y=startY;y<cam.y+VH/2/zoom;y+=g){const sy=w2sy(y);ctx.moveTo(0,sy);ctx.lineTo(VW,sy);}ctx.stroke();}
+  for(let x=startX;x<cam.x+VW/2/zoom;x+=g){const sx=snap(w2sx(x));ctx.moveTo(sx,0);ctx.lineTo(sx,VH);}
+  for(let y=startY;y<cam.y+VH/2/zoom;y+=g){const sy=snap(w2sy(y));ctx.moveTo(0,sy);ctx.lineTo(VW,sy);}ctx.stroke();}
 let vignette=null;
 function buildVignette(){vignette=document.createElement('canvas');vignette.width=VW;vignette.height=VH;const g=vignette.getContext('2d');
   const grd=g.createRadialGradient(VW/2,VH/2,Math.min(VW,VH)*0.35,VW/2,VH/2,Math.max(VW,VH)*0.75);grd.addColorStop(0,'rgba(0,0,0,0)');grd.addColorStop(1,'rgba(0,0,0,0.5)');g.fillStyle=grd;g.fillRect(0,0,VW,VH);}
@@ -4289,11 +4420,19 @@ function drawScreenFlash(){if(screenFlash.alpha<=0)return;
   ctx.fillStyle=screenFlash.color;ctx.globalAlpha=screenFlash.alpha;ctx.fillRect(0,0,VW,VH);ctx.globalAlpha=1;
   screenFlash.alpha=max(0,screenFlash.alpha-screenFlash.decay);}
 
-addEventListener('beforeunload',()=>{saveProfile();saveSettings();});
-let last=performance.now();let fpsAcc=0,fpsCnt=0,displayFps=60;
+function __npHandleAutoSaveOnUnload(){
+  if(__npSuppressAutoSave) return;
+  if(state==='playing'||state==='paused')saveRunState();
+  else if(state==='dead')clearRunSave();
+  saveProfile();
+  saveSettings();
+}
+addEventListener('beforeunload',__npHandleAutoSaveOnUnload);
+addEventListener('pagehide',__npHandleAutoSaveOnUnload);
+let last=performance.now();let fpsTimeAcc=0,fpsFrameAcc=0,fpsSampleAcc=0,displayFps=60;
 let metricsTimer=0;
-function loop(now){let dt=Math.min((now-last)/16.67,3);last=now;
-  fpsAcc+=dt;fpsCnt++;if(fpsCnt>=30){const avg=fpsAcc/fpsCnt;displayFps=Math.round(60/avg);dynParticleCap=avg>1.8?160:avg>1.4?220:avg>1.15?300:400;fpsAcc=0;fpsCnt=0;document.getElementById('fpsCounter').textContent=displayFps+' FPS';}
+function loop(now){const rawDtMs=Math.min(Math.max(0,now-last),80);let dt=rawDtMs/16.67;last=now;
+  fpsTimeAcc+=rawDtMs;fpsFrameAcc++;fpsSampleAcc+=rawDtMs;if(fpsSampleAcc>=250){displayFps=Math.max(1,Math.round((fpsFrameAcc*1000)/fpsTimeAcc));dynParticleCap=displayFps>=55?400:displayFps>=45?300:displayFps>=35?220:160;fpsTimeAcc=0;fpsFrameAcc=0;fpsSampleAcc=0;const fpsEl=document.getElementById('fpsCounter');if(fpsEl)fpsEl.textContent=displayFps+' FPS';}
   // Adaptive low quality mode: if FPS stays below 30, disable expensive effects
   if(displayFps<30)lowFpsTimer+=dt;else lowFpsTimer=Math.max(0,lowFpsTimer-dt*0.5);
   const wasLow=lowQuality;lowQuality=lowFpsTimer>60;
@@ -4313,9 +4452,846 @@ function loop(now){let dt=Math.min((now-last)/16.67,3);last=now;
   }
   requestAnimationFrame(loop);}
 
-document.getElementById('startBtn').onclick=()=>{initAudio();
-  document.getElementById('title').style.animation='';document.getElementById('diff').style.display='flex';const dmb=document.getElementById('deathMenuBtn');if(dmb)dmb.style.display='none';newGame();state='playing';last=performance.now();document.getElementById('splash').classList.add('hide');syncMobileUI();refreshHowto();updateSettingsButtons();};
-newGame();state='menu';syncMobileUI();refreshHowto();requestAnimationFrame(loop);
+
+document.getElementById('startBtn').onclick=()=>{initAudio();closeTutorial();hideSplashStatsPanel();
+  document.getElementById('title').style.animation='';document.getElementById('diff').style.display='flex';const dmb=document.getElementById('deathMenuBtn');if(dmb)dmb.style.display='none';
+  clearRunSave&&clearRunSave();
+  newGame();state='playing';last=performance.now();document.getElementById('splash').classList.add('hide');syncMobileUI();refreshHowto();updateSettingsButtons();
+};
+const __npRunSaveKey='np_runSave_v4';
+const __npRunSaveVersion=1;
+const __npMaterialPityKillThreshold=18;
+let __npMaterialPityKills=0;
+const __npMaterialPityMs=15000;
+const __npAutoSaveMs=10000;
+const __npDismantleHoldMs=450;
+const __npDismantleRange=92;
+const __npSkyStates={
+  day:{
+    top:'#7ddcff',mid:'#3aa0ff',bottom:'#02010a',
+    sun:'#ffd86b',glow:'#ffcf66',
+    stars:0.15,
+    moon:false
+  },
+  sunset:{
+    top:'#ff7b5c',mid:'#ff3b7a',bottom:'#15051e',
+    sun:'#ff7b5c',glow:'#ffd0b0',
+    stars:0.45,
+    moon:false
+  },
+  night:{
+    top:'#180828',mid:'#090516',bottom:'#02010a',
+    sun:'#d8e8ff',glow:'#9fb0ff',
+    stars:0.95,
+    moon:true
+  }
+};
+let __npSky={state:'day',target:'day',blend:1,elapsed:0,transition:0,seed:0};
+let __npMenuBgLastTs=performance.now();
+let __npAutoSaveAcc=0;
+let __npMaterialPityAcc=0;
+let __npDismantleHold=0;
+let __npDismantleHintAcc=0;
+let __npSavedSnapshotCache=null;
+
+function clamp01(v){return v<0?0:v>1?1:v;}
+function lerpColor(a,b,t){
+  const pa=a.match(/\w\w/g).map(x=>parseInt(x,16));
+  const pb=b.match(/\w\w/g).map(x=>parseInt(x,16));
+  const r=Math.round(pa[0]+(pb[0]-pa[0])*t);
+  const g=Math.round(pa[1]+(pb[1]-pa[1])*t);
+  const bl=Math.round(pa[2]+(pb[2]-pa[2])*t);
+  return '#'+[r,g,bl].map(v=>v.toString(16).padStart(2,'0')).join('');
+}
+function deepCloneForRun(value, seen){
+  if(value===null||typeof value!=='object') return value;
+  if(value instanceof Set) return Array.from(value);
+  if(value instanceof Map) return Array.from(value.entries());
+  if(Array.isArray(value)) return value.map(v=>deepCloneForRun(v, seen));
+  if(seen.has(value)) return undefined;
+  seen.add(value);
+  const out={};
+  for(const [k,v] of Object.entries(value)){
+    if(typeof v==='function' || typeof v==='undefined') continue;
+    if(v && v.nodeType) continue;
+    if(k==='canvas' || k==='ctx' || k==='target' || k==='owner' || k==='parent' || k==='sourceEnemy') continue;
+    out[k]=deepCloneForRun(v, seen);
+  }
+  return out;
+}
+function cloneRunValue(value){
+  try{
+    return deepCloneForRun(value, new WeakSet());
+  }catch(err){
+    return null;
+  }
+}
+function reviveRunCollection(arr, convertSetProps){
+  if(!Array.isArray(arr)) return [];
+  return arr.map(item=>{
+    if(!item || typeof item!=='object') return item;
+    const out=Array.isArray(item)?item.slice():{...item};
+    if(convertSetProps){
+      for(const key of convertSetProps){
+        if(Array.isArray(out[key])) out[key]=new Set(out[key]);
+      }
+    }
+    return out;
+  });
+}
+function normalizePlayerAfterLoad(){
+  if(!player) return;
+  player.materials=player.materials||{bolt:0,screw:0,feather:0,crystal:0,chip:0};
+  for(const id of Object.keys(MATERIALS||{})){if(!Number.isFinite(player.materials[id]))player.materials[id]=0;}
+  if(Array.isArray(player.weaponsUsed)) player.weaponsUsed=new Set(player.weaponsUsed);
+  else if(!(player.weaponsUsed instanceof Set)) player.weaponsUsed=new Set(player.weaponsUsed||['gun']);
+  player.passives=player.passives||{};
+  player.ultimates=player.ultimates||{};
+  player.skills=Array.isArray(player.skills)?player.skills:[];
+  for(let i=0;i<player.skills.length;i++){
+    const s=player.skills[i];
+    if(!s) continue;
+    if(!Number.isFinite(s.t)) s.t=0;
+    if(!Number.isFinite(s.active)) s.active=0;
+  }
+  player.matrixLevel=Number.isFinite(player.matrixLevel)?player.matrixLevel:0;
+  player.matrixCd=Number.isFinite(player.matrixCd)?player.matrixCd:0;
+  player.matrixCount=Number.isFinite(player.matrixCount)?player.matrixCount:0;
+  player.parasiticLevel=Number.isFinite(player.parasiticLevel)?player.parasiticLevel:0;
+  player.parasiticCd=Number.isFinite(player.parasiticCd)?player.parasiticCd:0;
+  player.parasiticActive=Number.isFinite(player.parasiticActive)?player.parasiticActive:0;
+  player.ricochetLevel=Number.isFinite(player.ricochetLevel)?player.ricochetLevel:0;
+  player.ricochetChance=Number.isFinite(player.ricochetChance)?player.ricochetChance:0.25;
+  player.ricochetExplosion=Number.isFinite(player.ricochetExplosion)?player.ricochetExplosion:1;
+  player.overdriveLevel=Number.isFinite(player.overdriveLevel)?player.overdriveLevel:0;
+  player._matCalcTick=player._matCalcTick||0;
+}
+function isValidSavedRunSnapshot(snap){
+  if(!snap || typeof snap!=='object') return false;
+  if(snap.v!==__npRunSaveVersion) return false;
+  if(snap.dead===true || snap.state!=='playing') return false;
+  if(!snap.player || typeof snap.player!=='object') return false;
+  if(snap.player.dead===true) return false;
+  const hp=Number(snap.player.hp);
+  const wave=Number(snap.waveNum);
+  const scoreOk=Number.isFinite(Number(snap.score));
+  const goldOk=Number.isFinite(Number(snap.gold));
+  if(!Number.isFinite(hp) || hp<=0) return false;
+  if(!Number.isFinite(wave) || wave<1) return false;
+  if(!scoreOk || !goldOk) return false;
+  return true;
+}
+function updateContinueButton(){
+  const btn=document.getElementById('continueBtn');
+  if(!btn) return;
+  let snap=__npSavedSnapshotCache;
+  if(!isValidSavedRunSnapshot(snap)){
+    snap=loadSavedRunSnapshot();
+    __npSavedSnapshotCache=snap;
+  }
+  const hasSave=!!snap;
+  btn.style.display=(hasSave&&state!=='dead')?'inline-block':'none';
+  btn.disabled=!hasSave;
+  btn.setAttribute('aria-hidden', hasSave?'false':'true');
+}
+function loadSavedRunSnapshot(){
+  const raw=loadJSON(__npRunSaveKey,null);
+  if(!isValidSavedRunSnapshot(raw)){
+    try{localStorage.removeItem(__npRunSaveKey);}catch(e){}
+    return null;
+  }
+  return raw;
+}
+function storeSavedRunSnapshot(snap){
+  try{saveJSON(__npRunSaveKey,snap);__npSavedSnapshotCache=snap;}catch(e){}
+  updateContinueButton();
+}
+function clearRunSave(){
+  try{localStorage.removeItem(__npRunSaveKey);}catch(e){}
+  __npSavedSnapshotCache=null;
+  updateContinueButton();
+}
+function buildRunSnapshot(){
+  if(!player || state==='dead') return null;
+  const snap={
+    v:__npRunSaveVersion,
+    dead:false,
+    t:Date.now(),
+    state:'playing',
+    difficulty,
+    runId,
+    gold,
+    highScore,
+    waveNum,
+    waveTime,
+    gameTime,
+    score,
+    bossActive:!!bossActive,
+    bossReward:!!bossReward,
+    eliteChance,
+    weather,
+    weatherTimer,
+    _prevWeather,
+    eventType,
+    eventTimer,
+    eventCooldown,
+    bgPulse,
+    slowmo,
+    zoom,
+    cam:cloneRunValue(cam),
+    camShake,
+    hitStop,
+    spawnTimer,
+    waveDmgTaken,
+    streakCount,
+    streakTimer,
+    firstBlood,
+    aceWindow,
+    aceKills,
+    cutscene:cloneRunValue(cutscene),
+    questSystem:cloneRunValue(questSystem),
+    pendingBossPool:cloneRunValue(pendingBossPool),
+    lastOfferFromPool:cloneRunValue(lastOfferFromPool),
+    rerollCount,
+    player:cloneRunValue(player),
+    walls:cloneRunValue(walls),
+    enemies:cloneRunValue(enemies),
+    bullets:cloneRunValue(bullets),
+    ebullets:cloneRunValue(ebullets),
+    hazards:cloneRunValue(hazards),
+    pickups:cloneRunValue(pickups),
+    turrets:cloneRunValue(turrets),
+    orbs:cloneRunValue(orbs),
+    bossLasers:cloneRunValue(bossLasers),
+    stats:cloneRunValue(stats)
+  };
+  if(snap.player && snap.player.weaponsUsed && !(snap.player.weaponsUsed instanceof Array) && snap.player.weaponsUsed.size){
+    snap.player.weaponsUsed=Array.from(snap.player.weaponsUsed);
+  }else if(snap.player && snap.player.weaponsUsed instanceof Set){
+    snap.player.weaponsUsed=Array.from(snap.player.weaponsUsed);
+  }
+  return snap;
+}
+function saveRunState(){
+  if(__npSuppressAutoSave) return;
+  const snap=buildRunSnapshot();
+  if(!snap){clearRunSave();return;}
+  storeSavedRunSnapshot(snap);
+}
+function restoreRunSnapshot(snap){
+  if(!isValidSavedRunSnapshot(snap)){return false;}
+  newGame();
+  difficulty=Number.isFinite(snap.difficulty)?snap.difficulty:difficulty;
+  runId=Number.isFinite(snap.runId)?snap.runId:runId;
+  gold=Number.isFinite(snap.gold)?snap.gold:gold;
+  highScore=Number.isFinite(snap.highScore)?snap.highScore:highScore;
+  waveNum=Number.isFinite(snap.waveNum)?snap.waveNum:waveNum;
+  waveTime=Number.isFinite(snap.waveTime)?snap.waveTime:waveTime;
+  gameTime=Number.isFinite(snap.gameTime)?snap.gameTime:gameTime;
+  score=Number.isFinite(snap.score)?snap.score:score;
+  bossActive=!!snap.bossActive;
+  bossReward=!!snap.bossReward;
+  eliteChance=Number.isFinite(snap.eliteChance)?snap.eliteChance:eliteChance;
+  weather=typeof snap.weather==='string'?snap.weather:weather;
+  weatherTimer=Number.isFinite(snap.weatherTimer)?snap.weatherTimer:weatherTimer;
+  _prevWeather=typeof snap._prevWeather==='string'?snap._prevWeather:_prevWeather;
+  eventType=typeof snap.eventType==='string'?snap.eventType:eventType;
+  eventTimer=Number.isFinite(snap.eventTimer)?snap.eventTimer:eventTimer;
+  eventCooldown=Number.isFinite(snap.eventCooldown)?snap.eventCooldown:eventCooldown;
+  bgPulse=Number.isFinite(snap.bgPulse)?snap.bgPulse:bgPulse;
+  slowmo=Number.isFinite(snap.slowmo)?snap.slowmo:slowmo;
+  zoom=Number.isFinite(snap.zoom)?snap.zoom:zoom;
+  cam=cloneRunValue(snap.cam)||cam;
+  camShake=Number.isFinite(snap.camShake)?snap.camShake:camShake;
+  hitStop=Number.isFinite(snap.hitStop)?snap.hitStop:hitStop;
+  spawnTimer=Number.isFinite(snap.spawnTimer)?snap.spawnTimer:spawnTimer;
+  waveDmgTaken=Number.isFinite(snap.waveDmgTaken)?snap.waveDmgTaken:waveDmgTaken;
+  streakCount=Number.isFinite(snap.streakCount)?snap.streakCount:streakCount;
+  streakTimer=Number.isFinite(snap.streakTimer)?snap.streakTimer:streakTimer;
+  firstBlood=!!snap.firstBlood;
+  aceWindow=Number.isFinite(snap.aceWindow)?snap.aceWindow:aceWindow;
+  aceKills=Number.isFinite(snap.aceKills)?snap.aceKills:aceKills;
+  cutscene=cloneRunValue(snap.cutscene);
+  questSystem=cloneRunValue(snap.questSystem)||questSystem;
+  pendingBossPool=Array.isArray(snap.pendingBossPool)?snap.pendingBossPool.slice():pendingBossPool;
+  lastOfferFromPool=Array.isArray(snap.lastOfferFromPool)?snap.lastOfferFromPool.slice():lastOfferFromPool;
+  rerollCount=Number.isFinite(snap.rerollCount)?snap.rerollCount:rerollCount;
+  player=cloneRunValue(snap.player)||player;
+  normalizePlayerAfterLoad();
+  walls=Array.isArray(snap.walls)?cloneRunValue(snap.walls):walls;
+  enemies=reviveRunCollection(snap.enemies);
+  bullets=reviveRunCollection(snap.bullets,['hit']);
+  ebullets=reviveRunCollection(snap.ebullets);
+  hazards=reviveRunCollection(snap.hazards);
+  pickups=reviveRunCollection(snap.pickups);
+  turrets=reviveRunCollection(snap.turrets);
+  orbs=reviveRunCollection(snap.orbs);
+  bossLasers=reviveRunCollection(snap.bossLasers);
+  stats=cloneRunValue(snap.stats)||stats;
+  bossRef=enemies.find(e=>e&&e.type==='boss')||null;
+  document.getElementById('slotRocket').classList.toggle('locked',!player.rocketUnlocked);
+  const sr=document.getElementById('slotRail');if(sr)sr.classList.toggle('locked',!player.railUnlocked);
+  setWeapon(player.weapon||'gun');
+  setPhase();
+  if(typeof rebuildEnemyGrid==='function')rebuildEnemyGrid();
+  if(typeof updateHUD==='function')updateHUD();
+  if(typeof syncMobileUI==='function')syncMobileUI();
+  return true;
+}
+function showContinueFromSave(){
+  __npSavedSnapshotCache=loadSavedRunSnapshot();
+  updateContinueButton();
+  renderTutorialPanel();
+}
+function isRunAliveForSave(){
+  return !!player && state!=='dead' && player.dead!==true && Number(player.hp)>0;
+}
+function queueRunSave(){
+  if(isRunAliveForSave()) saveRunState();
+}
+function tutorialHtml(){
+  const vi=currentLang==='vi';
+  if(vi){
+    return `
+      <div class="tSec"><div class="tHead">Mục tiêu</div>
+      Sống sót qua từng làn sóng, nâng cấp nhân vật, thu thập vàng/nguyên liệu và xây dựng trụ để trụ vững lâu hơn.</div>
+      <div class="tSec"><div class="tHead">Điều khiển PC</div>
+      <b>WASD</b> di chuyển · <b>Chuột</b> ngắm · <b>LMB</b> bắn/tấn công · <b>SPACE</b> dash.<br>
+      <b>Q/1/2/3/4</b> đổi vũ khí · <b>E/R/F/G/T</b> dùng kỹ năng · <b>B</b> mở Shop · <b>K</b> mở Craft · <b>ESC</b> tạm dừng.</div>
+      <div class="tSec"><div class="tHead">Điều khiển Mobile</div>
+      Joystick trái để di chuyển, joystick phải để ngắm. Các nút bên phải là Dash, Skill và Menu/Craft/Weapon.<br>
+      Giữ nút để kích hoạt nếu nút đó có cơ chế hold.</div>
+      <div class="tSec"><div class="tHead">Chiến đấu</div>
+      Hãy ưu tiên giữ khoảng cách, gom địch vào vùng hẹp, dùng dash khi bị bao vây và nâng cấp đúng lúc. Mana dùng cho kỹ năng; khi mana đầy hãy tận dụng Overdrive nếu có.</div>
+      <div class="tSec"><div class="tHead">Chế tạo & Tài nguyên</div>
+      Vàng dùng cho shop nâng cấp vĩnh viễn. Nguyên liệu dùng để chế tạo trụ/turret. Nếu thiếu nguyên liệu, game sẽ có cơ chế pity để hỗ trợ drop loại còn thiếu.</div>
+      <div class="tSec"><div class="tHead">Lưu/Continue</div>
+      Khi tạm dừng hoặc thoát giữa trận, tiến trình hiện tại sẽ được lưu cục bộ. Nếu nhân vật chết, dữ liệu continue sẽ bị xóa để tránh tải lại một run đã thua.</div>
+      <div class="tSec"><div class="tHead">Mẹo</div>
+      Ưu tiên nâng HP/Mana sớm, giữ một skill phòng thân, và tháo dỡ trụ cũ khi cần trả lại nguyên liệu.</div>
+      <div class="tSmall">Hướng dẫn này tự đổi theo ngôn ngữ game.</div>`;
+  }
+  return `
+      <div class="tSec"><div class="tHead">Objective</div>
+      Survive each wave, upgrade your build, collect gold/materials, and place turrets to hold the line longer.</div>
+      <div class="tSec"><div class="tHead">PC Controls</div>
+      <b>WASD</b> move · <b>Mouse</b> aim · <b>LMB</b> shoot/attack · <b>SPACE</b> dash.<br>
+      <b>Q/1/2/3/4</b> switch weapons · <b>E/R/F/G/T</b> use skills · <b>B</b> Shop · <b>K</b> Craft · <b>ESC</b> Pause.</div>
+      <div class="tSec"><div class="tHead">Mobile Controls</div>
+      Left joystick moves, right joystick aims. The right-side buttons handle Dash, Skills, Menu/Craft/Weapon.<br>
+      Hold buttons when the action is designed as a hold input.</div>
+      <div class="tSec"><div class="tHead">Combat</div>
+      Keep distance, funnel enemies, dash when surrounded, and spend upgrades early. Mana powers skills; if mana is full, Overdrive-style bonuses become valuable.</div>
+      <div class="tSec"><div class="tHead">Crafting & Resources</div>
+      Gold buys permanent shop upgrades. Materials craft turrets and defenses. If a material is missing, the pity system helps guarantee the missing type sooner.</div>
+      <div class="tSec"><div class="tHead">Save / Continue</div>
+      When you pause or leave mid-run, the current run is saved locally. If you die, the continue save is cleared so you never resume a failed run.</div>
+      <div class="tSec"><div class="tHead">Tips</div>
+      Prioritize HP/Mana early, keep one panic skill ready, and dismantle old turrets when you need materials back.</div>
+      <div class="tSmall">This guide auto-switches with the game language.</div>`;
+}
+function renderTutorialPanel(){
+  const panel=document.getElementById('tutorialPanel');if(!panel)return;
+  const title=document.getElementById('tutorialTitle');if(title) title.textContent=TT('HOW TO PLAY');
+  const close=document.getElementById('tutorialCloseBtn');if(close) close.textContent=L('CLOSE');
+  const body=document.getElementById('tutorialContent');if(body) body.innerHTML=tutorialHtml();
+}
+function openTutorial(){const p=document.getElementById('tutorialPanel');if(!p)return;renderTutorialPanel();p.classList.add('show');p.setAttribute('aria-hidden','false');}
+function closeTutorial(){const p=document.getElementById('tutorialPanel');if(!p)return;p.classList.remove('show');p.setAttribute('aria-hidden','true');}
+function updateSplashStatsPanel(html, expanded=false){
+  const box=document.getElementById('splashStats');if(!box)return;
+  const body=document.getElementById('splashStatsBody');if(body&&typeof html==='string') body.innerHTML=html;
+  box.classList.remove('hidden');
+  box.classList.toggle('collapsed',!expanded);
+  box.classList.toggle('expanded',!!expanded);
+  box.setAttribute('aria-hidden','false');
+  const btn=document.getElementById('splashStatsToggle');if(btn){btn.textContent=expanded?'↓':'↑';btn.setAttribute('aria-expanded',expanded?'true':'false');}
+}
+function hideSplashStatsPanel(){
+  const box=document.getElementById('splashStats');if(!box)return;
+  box.classList.add('hidden');box.classList.remove('expanded');box.classList.add('collapsed');
+  box.setAttribute('aria-hidden','true');
+}
+function toggleSplashStats(){
+  const box=document.getElementById('splashStats');if(!box||box.classList.contains('hidden'))return;
+  const expanded=!box.classList.contains('expanded');
+  updateSplashStatsPanel(document.getElementById('splashStatsBody')?.innerHTML||'', expanded);
+}
+function clearAllGameData(){
+  const msg=currentLang==='vi'
+    ?'Bạn có chắc muốn XÓA TOÀN BỘ dữ liệu game không?\n\nHành động này sẽ xóa local save, shop, high score và tiến trình đã lưu.'
+    :'Are you sure you want to CLEAR ALL game data?\n\nThis removes local saves, shop progress, high score, and stored settings.';
+  if(!confirm(msg)) return;
+  __npSuppressAutoSave=true; // chống pagehide/beforeunload ghi đè lại dữ liệu vừa xóa
+  clearTimeout(_profileSaveTimer);
+  try{
+    for(const key of Object.values(STORE)) localStorage.removeItem(key);
+    localStorage.removeItem(__npRunSaveKey);
+    for(let i=localStorage.length-1;i>=0;i--){
+      const k=localStorage.key(i);
+      if(k && /^np_/i.test(k)) localStorage.removeItem(k);
+    }
+  }catch(e){}
+  try{ // làm sạch cache runtime để giao diện đổi ngay cả trước khi reload
+    __npSavedSnapshotCache=null;
+    shopOwned={};
+    gold=0;
+    highScore=0;
+    Object.keys(achievements).forEach(k=>delete achievements[k]);
+    clearRunSave();
+    newGame();
+    gold=0;
+    highScore=0;
+    score=0;
+    waveNum=1;
+    gameTime=0;
+    waveTime=0;
+    state='menu';
+    document.body.dataset.state='menu';
+    const splash=document.getElementById('splash');
+    if(splash){splash.classList.remove('hide','behind');}
+    ['pause','settings','shopPanel','craftPanel','statPanel'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove('show');});
+    closeTutorial();
+    hideSplashStatsPanel();
+    const dmb=document.getElementById('deathMenuBtn');if(dmb)dmb.style.display='none';
+    const msb=document.getElementById('menuShopBtn');if(msb)msb.style.display='inline-block';
+    const mst=document.getElementById('menuSettingsBtn');if(mst)mst.style.display='inline-block';
+    const startBtn=document.getElementById('startBtn');if(startBtn)startBtn.textContent=TT('INITIATE');
+    const contBtn=document.getElementById('continueBtn');if(contBtn){contBtn.style.display='none';contBtn.disabled=true;contBtn.setAttribute('aria-hidden','true');}
+    updateHighscoreDisplay();
+    updateContinueButton();
+    refreshHowto();
+    syncElementDisplays();
+    renderBG();
+  }catch(e){}
+  setTimeout(()=>location.reload(),60);
+}
+function pickMenuSkyState(force){
+  const roll=Math.random();
+  if(force){
+    __npSky.target=roll<0.52?'day':roll<0.78?'sunset':'night';
+  }else{
+    const pool=['day','sunset','night'];
+    let next=pool[randi(0,pool.length)];
+    if(next===__npSky.state) next=pool[(pool.indexOf(next)+1)%pool.length];
+    __npSky.target=next;
+  }
+  __npSky.elapsed=0;
+  __npSky.transition=0;
+}
+function tickMenuSky(dt){
+  if(state!=='menu') return;
+  __npSky.elapsed+=dt*16.67;
+  __npSky.transition=Math.min(1,__npSky.transition+dt*0.045);
+  if(__npSky.transition>=1){__npSky.state=__npSky.target;}
+  if(__npSky.elapsed>=20000){
+    __npSky.elapsed=0;
+    if(Math.random()<0.72) pickMenuSkyState(false);
+  }
+}
+function drawMenuSky(){
+  const s1=__npSkyStates[__npSky.state]||__npSkyStates.day;
+  const s2=__npSkyStates[__npSky.target]||s1;
+  const t=clamp01(__npSky.transition);
+  const top=lerpColor(s1.top,s2.top,t);
+  const mid=lerpColor(s1.mid,s2.mid,t);
+  const bottom=lerpColor(s1.bottom,s2.bottom,t);
+  const sun=lerpColor(s1.sun,s2.sun,t);
+  const glow=lerpColor(s1.glow,s2.glow,t);
+  const stars=s1.stars+(s2.stars-s1.stars)*t;
+  bgx.clearRect(0,0,VW,VH);
+  const g=bgx.createLinearGradient(0,0,0,VH);
+  g.addColorStop(0,top);
+  g.addColorStop(0.52,mid);
+  g.addColorStop(1,bottom);
+  bgx.fillStyle=g;
+  bgx.fillRect(0,0,VW,VH);
+  const horizon=VH*0.58;
+  const cx=VW*0.5;
+  const cy=VH*(0.34+0.03*Math.sin(__npSky.elapsed*0.0008));
+  const orbR=Math.min(VW,VH)*0.11;
+  bgx.save();
+  bgx.globalCompositeOperation='lighter';
+  bgx.shadowBlur=28;
+  bgx.shadowColor=glow;
+  const orbGradient=bgx.createRadialGradient(cx,cy,0,cx,cy,orbR*2.5);
+  orbGradient.addColorStop(0, sun);
+  orbGradient.addColorStop(0.35, glow);
+  orbGradient.addColorStop(1, 'rgba(255,255,255,0)');
+  bgx.fillStyle=orbGradient;
+  bgx.beginPath();
+  bgx.arc(cx,cy,orbR*1.2,0,TAU);
+  bgx.fill();
+  bgx.shadowBlur=0;
+  bgx.fillStyle=sun;
+  bgx.beginPath();
+  bgx.arc(cx,cy,orbR,0,TAU);
+  bgx.fill();
+  if(s2.moon){
+    bgx.fillStyle='rgba(255,255,255,.18)';
+    bgx.beginPath();
+    bgx.arc(cx+orbR*0.22,cy-orbR*0.1,orbR*0.82,0,TAU);
+    bgx.fill();
+    bgx.globalCompositeOperation='source-over';
+    bgx.fillStyle='rgba(6,8,18,.9)';
+    bgx.beginPath();
+    bgx.arc(cx+orbR*0.36,cy-orbR*0.12,orbR*0.82,0,TAU);
+    bgx.fill();
+  }else{
+    bgx.globalCompositeOperation='source-over';
+  }
+  bgx.restore();
+  bgx.save();
+  bgx.globalCompositeOperation='lighter';
+  const starCount=Math.floor(90+stars*130);
+  for(let i=0;i<starCount;i++){
+    const sx=((i*97+__npSky.seed*31)%997)/997*VW;
+    const sy=((i*193+__npSky.seed*53)%733)/733*VH*0.55;
+    const tw=0.45+0.55*((Math.sin((__npSky.elapsed*0.0015)+i*1.7)+1)*0.5);
+    bgx.globalAlpha=clamp01((0.08+stars*0.55)*tw);
+    bgx.fillStyle=i%3===0?'#fff':i%3===1?'#9ff4ff':'#c8a6ff';
+    bgx.fillRect(sx,sy,1.2+stars*1.8,1.2+stars*1.8);
+  }
+  bgx.globalAlpha=1;
+  bgx.restore();
+  const gridScroll=(__npSky.elapsed*0.045)%(Math.max(40,(VH-horizon)*0.12));
+  const snap=v=>Math.round(v)+0.5;
+  bgx.save();
+  bgx.globalAlpha=0.78;
+  bgx.fillStyle='rgba(10,6,22,.35)';
+  for(let i=-1;i<8;i++){
+    const yy=snap(horizon+i*8+gridScroll*0.18);
+    bgx.fillRect(0,yy,VW,1.25);
+  }
+  bgx.restore();
+  bgx.save();
+  bgx.strokeStyle='rgba(31,182,201,.12)';
+  bgx.lineWidth=1;
+  const rows=12;
+  const rowGap=(VH-horizon)/rows;
+  for(let i=0;i<rows;i++){
+    let yy=horizon+i*rowGap+gridScroll;
+    yy=horizon+((yy-horizon)%(VH-horizon));
+    if(yy<horizon) yy+=VH-horizon;
+    yy=snap(yy);
+    bgx.globalAlpha=clamp01(0.18+(i/rows)*0.26);
+    bgx.beginPath();
+    bgx.moveTo(0,yy);
+    bgx.lineTo(VW,snap(yy+Math.sin(__npSky.elapsed*0.001+i)*1.5));
+    bgx.stroke();
+  }
+  bgx.strokeStyle='rgba(224,65,138,.14)';
+  bgx.globalAlpha=0.72;
+  for(let i=0;i<=14;i++){
+    const xx=snap((i/14)*VW);
+    bgx.beginPath();
+    bgx.moveTo(xx,snap(horizon));
+    bgx.lineTo(snap(VW*0.5+(xx-VW*0.5)*5),VH);
+    bgx.stroke();
+  }
+  bgx.restore();
+}
+const __npOriginalRenderBG=renderBG;
+renderBG=function(){
+  if(state==='menu' || state==='dead'){
+    if(state==='menu' && !__npSky.seed){
+      __npSky.seed=(Math.random()*100000)|0;
+      pickMenuSkyState(true);
+    }
+    if(state==='menu'){const __now=performance.now();const __dtMenu=Math.min((__now-(__npMenuBgLastTs||__now))/16.67,3);__npMenuBgLastTs=__now;tickMenuSky(__dtMenu);} 
+    drawMenuSky();
+    return;
+  }
+  return __npOriginalRenderBG();
+};
+function nearestEnemyInRadius(x,y,range,filterFn){
+  const nearby=typeof gridQuery==='function'?gridQuery(x,y,range+80):(enemies||[]);
+  let best=null,bd=range*range;
+  for(const e of nearby){
+    if(!e||e.dead||e.hp<=0||(e.dive&&e.under)) continue;
+    if(filterFn && !filterFn(e)) continue;
+    const d=dist2(x,y,e.x,e.y);
+    if(d<bd){bd=d;best=e;}
+  }
+  return best;
+}
+function densestEnemyCluster(originX,originY,searchR){
+  const nearby=typeof gridQuery==='function'?gridQuery(originX,originY,searchR):(enemies||[]);
+  let best=null,bestCount=0,bestR2=Infinity;
+  for(const e of nearby){
+    if(!e||e.dead||e.hp<=0||(e.dive&&e.under)) continue;
+    let count=0;
+    for(const o of nearby){
+      if(!o||o===e||o.dead||o.hp<=0||(o.dive&&o.under)) continue;
+      if(dist2(e.x,e.y,o.x,o.y)<=190*190) count++;
+    }
+    const d2=dist2(originX,originY,e.x,e.y);
+    if(count>bestCount || (count===bestCount && d2<bestR2)){best=e;bestCount=count;bestR2=d2;}
+  }
+  return best;
+}
+function getMissingMaterialId(){
+  const m=ensureMaterials&&ensureMaterials();
+  if(!m) return null;
+  const missing=Object.keys(MATERIALS).filter(id=>(m[id]||0)<=0);
+  if(!missing.length) return null;
+  return missing[randi(0,missing.length)];
+}
+function forceMaterialPityDrop(x,y){
+  const id=getMissingMaterialId();
+  if(!id) return false;
+  spawnMaterialPickup(x,y,id);
+  return true;
+}
+function tickMaterialPity(dt){
+  if(state!=='playing' || !player) return;
+  __npMaterialPityAcc+=dt*16.67;
+  if(__npMaterialPityAcc>=__npMaterialPityMs){
+    __npMaterialPityAcc=0;
+    if(forceMaterialPityDrop(player.x,player.y-18)){
+      floatText(player.x,player.y-28,'MATERIAL PITY','#9ff4ff',false);
+    }
+  }
+}
+function dismantleTurret(t){
+  if(!t||!player||!turrets) return false;
+  const idx=turrets.indexOf(t);
+  if(idx<0) return false;
+  const recipe=CRAFT_RECIPES.find(r=>r.id===t.type);
+  if(!recipe) return false;
+  const baseRefund={};
+  for(const [id,n] of Object.entries(recipe.cost)){
+    const raw=Math.floor(n*0.8);
+    const missingPenalty=Math.floor((1-Math.max(0,Math.min(1,(t.hp||0)/(t.maxHp||1))))/0.1);
+    baseRefund[id]=Math.max(1,raw-missingPenalty);
+  }
+  for(const [id,n] of Object.entries(baseRefund)){
+    addMaterial(id,n,player.x,player.y-18);
+  }
+  burst(t.x,t.y,'#9ff4ff',18,6,30);
+  ring(t.x,t.y,'#16c98a',20,80,18);
+  turrets.splice(idx,1);
+  floatText(player.x,player.y-34,'DISMANTLED','#16c98a',false);
+  return true;
+}
+function findDismantleTarget(){
+  if(!turrets||!turrets.length||!player) return null;
+  let best=null,bd=__npDismantleRange*__npDismantleRange;
+  for(const t of turrets){
+    const d=dist2(player.x,player.y,t.x,t.y);
+    if(d<bd){bd=d;best=t;}
+  }
+  return best;
+}
+function tickDismantleTurret(dt){
+  if(state!=='playing' || !player) { __npDismantleHold=0; return; }
+  if(!keys['x']){ __npDismantleHold=0; return; }
+  const target=findDismantleTarget();
+  if(!target){ __npDismantleHold=0; __npDismantleHintAcc=0; return; }
+  __npDismantleHold+=dt*16.67; __npDismantleHintAcc+=dt*16.67;
+  if(__npDismantleHold>=__npDismantleHoldMs){
+    __npDismantleHold=0; __npDismantleHintAcc=0;
+    dismantleTurret(target);
+  }else if(__npDismantleHintAcc>=550){
+    __npDismantleHintAcc=0;
+    floatText(player.x,player.y-42,'HOLD X TO DISMANTLE','#9ff4ff',false);
+  }
+}
+function triggerMathMatrix(){
+  if(!player||!player.matrixLevel) return;
+  if(player.matrixCd>0) return;
+  const level=player.matrixLevel;
+  const target=densestEnemyCluster(player.x,player.y,420);
+  if(!target) return;
+  const complexityLevel=Math.min(5,level);
+  const equations=['1+1','2×2','3+4','5-1','6÷2','7+2','8-3','9-4','12÷3','4×3'];
+  const expr=equations[randi(0,equations.length)];
+  const count=Math.min(1+level,5);
+  const baseA=Math.atan2(target.y-player.y,target.x-player.x);
+  for(let i=0;i<count;i++){
+    const spread=(count===1?0:lerp(-0.2,0.2,i/(count-1)));
+    const a=baseA+spread;
+    const b=getBullet();
+    b.x=player.x+Math.cos(a)*18;b.y=player.y+Math.sin(a)*18;
+    b.vx=Math.cos(a)*(11+level*0.6);b.vy=Math.sin(a)*(11+level*0.6);
+    b.r=5+level*0.35;b.dmg=player.dmg*(1.15+level*0.12);b.life=58+level*6;
+    b.tx=b.x;b.ty=b.y;b.pierce=Math.min(3,1+Math.floor(level/2));b.bounce=0;
+    b.hit=b.hit||new Set();b.hit.clear();b.homing=true;b.col='#ffd000';b.explosive=level>=3;b.source='matrix';
+    bullets.push(b);
+  }
+  floatText(target.x,target.y-28,'MATRIX '+expr,'#ffd000',false);
+  burst(target.x,target.y,'#ffd000',10+level*2,4+level*0.6,18+level*2);
+  player.matrixCd=Math.max(3500,5000-350*level);
+}
+function triggerParasiticMagnet(){
+  if(!player||!player.parasiticLevel) return;
+  if(player.parasiticCd>0) return;
+  const level=player.parasiticLevel;
+  const range=180+level*30;
+  const target=nearestEnemyInRadius(player.x,player.y,range,e=>dist2(e.x,e.y,player.x,player.y)<=range*range);
+  if(!target) return;
+  target.parasiticT=4200+level*700;
+  target.parasiticLevel=level;
+  target.parasiticPulse=0;
+  target.parasiticOwner=true;
+  target._baseCol=target._baseCol||target.col;
+  target.col='#16c98a';
+  target.flash=8;
+  burst(target.x,target.y,'#16c98a',18+level*3,5,24);
+  ring(target.x,target.y,'#16c98a',target.r,target.r+80+level*12,20);
+  player.parasiticCd=Math.max(8000,12000-800*level);
+}
+function updateParasiticMagnet(dt){
+  if(!enemies||!enemies.length) return;
+  for(let i=enemies.length-1;i>=0;i--){
+    const e=enemies[i];
+    if(!e||!e.parasiticT) continue;
+    e.parasiticT-=dt*16.67;
+    e.parasiticPulse=(e.parasiticPulse||0)+dt*0.18;
+    e.spin=(e.spin||0)+dt*0.12;
+    e.wob=(e.wob||0)+dt*0.04;
+    const nearby=typeof gridQuery==='function'?gridQuery(e.x,e.y,220):(enemies||[]);
+    for(const o of nearby){
+      if(!o||o===e||o.dead||o.hp<=0||(o.dive&&o.under)) continue;
+      const d2=dist2(e.x,e.y,o.x,o.y);
+      if(d2<220*220){
+        const pull=0.065+(e.parasiticLevel||1)*0.018;
+        const dx=e.x-o.x,dy=e.y-o.y;
+        o.x+=dx*pull*dt*16.67;
+        o.y+=dy*pull*dt*16.67;
+      }
+    }
+    if(e.parasiticT<=0 || e.dead || e.hp<=0){
+      const dmg=(player?player.dmg:20)*(2.2+(e.parasiticLevel||1)*0.45);
+      rocketExplode(e.x,e.y,dmg,120+(e.parasiticLevel||1)*25,false);
+      e.parasiticT=0;
+      e.col=e._baseCol||e.col;
+      if(e.hp>0){e.hp=0; const idx=enemies.indexOf(e); if(idx>=0) killEnemy(idx);}
+    }
+  }
+}
+function updatePassiveBoosts(dt){
+  if(!player) return;
+  if(player.matrixLevel>0){
+    player.matrixCd=Math.max(0,(player.matrixCd||0)-dt*16.67);
+    if(player.matrixCd<=0) triggerMathMatrix();
+  }
+  if(player.parasiticLevel>0){
+    player.parasiticCd=Math.max(0,(player.parasiticCd||0)-dt*16.67);
+    if(player.parasiticCd<=0) triggerParasiticMagnet();
+  }
+  if(player.ricochetLevel>0){
+    player.ricochetChance=clamp(0.25+0.08*(player.ricochetLevel-1),0.25,0.55);
+  }
+  if(player.overdriveLevel>0){
+    const fullMana=player.mana>=player.maxMana-0.01;
+    player._overdriveActive=fullMana;
+  }
+}
+function applyOverdriveTempBoost(){
+  if(!player || !player._overdriveActive) return null;
+  const boost=1+0.2*Math.max(1,player.overdriveLevel);
+  const backup={speed:player.speed,gunRate:player.gunRate,swordRate:player.swordRate,rocketRate:player.rocketRate,railRate:player.railRate};
+  player.speed*=boost;
+  player.gunRate/=boost;
+  player.swordRate/=boost;
+  player.rocketRate/=boost;
+  player.railRate/=boost;
+  return backup;
+}
+function restoreOverdriveTempBoost(backup){
+  if(!backup || !player) return;
+  player.speed=backup.speed;
+  player.gunRate=backup.gunRate;
+  player.swordRate=backup.swordRate;
+  player.rocketRate=backup.rocketRate;
+  player.railRate=backup.railRate;
+}
+const __npOriginalFireGun=fireGun;
+fireGun=function(){
+  if(!player) return;
+  player.fireTimer=player.gunRate;player.thrust=1;SFX.gun();
+  const baseA=player.angle;
+  const ricochetActive=player.ricochetLevel>0 && Math.random()<player.ricochetChance;
+  let aimA=baseA;
+  if(ricochetActive){
+    const cluster=densestEnemyCluster(player.x,player.y,520);
+    if(cluster) aimA=Math.atan2(cluster.y-player.y,cluster.x-player.x);
+  }
+  const n=player.multishot,spread=0.3;
+  for(let i=0;i<n;i++){
+    const off=n===1?0:lerp(-spread,spread,i/(n-1));
+    const a=aimA+off;
+    const b=getBullet();
+    b.x=player.x+Math.cos(a)*18;b.y=player.y+Math.sin(a)*18;
+    b.vx=Math.cos(a)*12;b.vy=Math.sin(a)*12;b.r=5;b.dmg=player.dmg;b.life=Math.round(70*player.range);b.tx=b.x;b.ty=b.y;b.pierce=player.pierce;b.bounce=player.bounce;b.hit=b.hit||new Set();b.hit.clear();b.homing=false;b.col=ricochetActive?'#ffd000':null;b.explosive=ricochetActive;b.radiusBonus=ricochetActive?0.75:1;b.source=ricochetActive?'matrix-gun':'gun';
+    bullets.push(b);
+  }
+  burst(player.x+Math.cos(aimA)*20,player.y+Math.sin(aimA)*20,ricochetActive?'#ffd000':'#1fb6c9',5,4,12);shake(3);
+};
+const __npOriginalKillEnemy=killEnemy;
+killEnemy=function(idx){
+  const e=enemies&&enemies[idx];
+  const wasMissing=!!e;
+  __npOriginalKillEnemy(idx);
+  if(wasMissing){
+    __npMaterialPityKills++;
+    if(__npMaterialPityKills>=__npMaterialPityKillThreshold){
+      __npMaterialPityKills=0;
+      if(forceMaterialPityDrop(e.x,e.y)) floatText(e.x,e.y-24,'PITY DROP','#9ff4ff',false);
+    }
+  }
+};
+const __npOriginalPauseGame=pauseGame;
+pauseGame=function(){saveRunState();return __npOriginalPauseGame.apply(this,arguments);};
+const __npOriginalBackToMenu=backToMenu;
+backToMenu=function(){if(player&&state!=='dead') saveRunState(); else clearRunSave(); const r=__npOriginalBackToMenu.apply(this,arguments); updateContinueButton(); return r;};
+const __npOriginalDie=die;
+die=function(){clearRunSave(); const r=__npOriginalDie.apply(this,arguments); updateContinueButton(); return r;};
+const __npOriginalNewGame=newGame;
+newGame=function(){const r=__npOriginalNewGame.apply(this,arguments); if(player){player.matrixLevel=player.matrixLevel||0;player.matrixCd=player.matrixCd||0;player.parasiticLevel=player.parasiticLevel||0;player.parasiticCd=player.parasiticCd||0;player.ricochetLevel=player.ricochetLevel||0;player.ricochetChance=player.ricochetChance||0.25;player.overdriveLevel=player.overdriveLevel||0;player._overdriveActive=false;} updateContinueButton(); return r;};
+const __npOriginalUpdate=update;
+update=function(dt){
+  tickMenuSky(dt);
+  if(state==='playing'){__npAutoSaveAcc+=dt*16.67;if(__npAutoSaveAcc>=__npAutoSaveMs){__npAutoSaveAcc=0;saveRunState();}}
+  tickMaterialPity(dt);
+  tickDismantleTurret(dt);
+  updatePassiveBoosts(dt);
+  updateParasiticMagnet(dt);
+  const backup=applyOverdriveTempBoost();
+  try{
+    return __npOriginalUpdate.apply(this,arguments);
+  }finally{
+    restoreOverdriveTempBoost(backup);
+  }
+};
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&state!=='dead'&&player)saveRunState();});
+window.addEventListener('pagehide',()=>{if(state!=='dead'&&player)saveRunState();});
+const __npOriginalBeforeUnloadSave=()=>{if(state!=='dead'&&player)saveRunState();};
+window.addEventListener('beforeunload',__npOriginalBeforeUnloadSave);
+const __npContinueBtn=document.getElementById('continueBtn');
+if(__npContinueBtn){
+  __npContinueBtn.onclick=()=>{
+    const snap=loadSavedRunSnapshot();
+    if(!snap){clearRunSave();return;}
+    if(!restoreRunSnapshot(snap)){clearRunSave();return;}
+    state='playing';
+    document.getElementById('splash').classList.add('hide');
+    document.getElementById('splash').classList.remove('behind');
+    document.getElementById('diff').style.display='flex';
+    document.getElementById('title').style.animation='';
+    document.getElementById('subtitle').textContent=TT('FINAL EDITION');
+    document.getElementById('startBtn').textContent=TT('INITIATE');
+    closeTutorial();hideSplashStatsPanel();
+    last=performance.now();
+    syncMobileUI();
+    refreshHowto();
+    updateSettingsButtons();
+  };
+}
+showContinueFromSave();
+newGame();state='menu';syncMobileUI();refreshHowto();renderTutorialPanel();hideSplashStatsPanel();requestAnimationFrame(loop);
+
 
 
 })();
