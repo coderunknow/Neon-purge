@@ -151,6 +151,16 @@
   .audioRow input[type=range]{accent-color:#16c98a;width:150px;cursor:pointer;}
   .togBtn{pointer-events:auto;cursor:pointer;padding:8px 18px;border-radius:8px;border:1.5px solid rgba(31,182,201,.4);background:rgba(15,10,35,.8);color:#1fb6c9;font-weight:700;letter-spacing:2px;}
   .togBtn.on{border-color:#16c98a;color:#16c98a;}
+  .musicPanel{width:min(720px,92vw);margin:4px 0 12px;padding:10px 12px;border:1px solid rgba(31,182,201,.18);border-radius:12px;background:rgba(15,10,35,.42);pointer-events:auto;}
+  .musicPanelTitle{font-size:11px;letter-spacing:3px;font-weight:900;color:#9ff4ff;text-align:center;margin-bottom:8px;text-transform:uppercase;}
+  .musicPlaylistRow,.musicModeRow{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin:6px 0;}
+  .musicTrackBtn{pointer-events:auto;cursor:pointer;padding:9px 12px;min-width:148px;border-radius:9px;border:1.5px solid rgba(255,255,255,.14);background:rgba(8,4,22,.82);color:#9fb0c5;font-size:12px;font-weight:900;letter-spacing:1.5px;transition:transform .12s,border-color .15s,box-shadow .15s,color .15s,opacity .15s;text-transform:uppercase;}
+  .musicTrackBtn:hover{transform:scale(1.04);border-color:#e0418a;color:#fff;box-shadow:0 0 14px rgba(224,65,138,.28);}
+  .musicTrackBtn.sel{border-color:#16c98a;color:#16c98a;box-shadow:0 0 14px rgba(22,201,138,.28);}
+  .musicTrackBtn.loading{opacity:.65;border-style:dashed;}
+  .musicTrackBtn.error{border-color:#ff6b8a;color:#ff8aa6;}
+  .musicModeBtn{min-width:116px;padding:8px 12px;font-size:11px;}
+  .musicStatus{min-height:15px;text-align:center;font-size:10px;letter-spacing:1.6px;color:#5a6a80;margin-top:6px;}
 
   #comboWidget{position:absolute;top:16px;left:50%;transform:translateX(-50%);z-index:6;display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none;min-width:180px;opacity:0;transition:opacity .15s;}
   #comboWidget.show{opacity:1;}
@@ -1082,7 +1092,145 @@ body.mobile-mode .craft-grid {
 }
 
 
+
+/* ── Platform-aware Ad UI Styles ─────────────────────────────
+   Khi chạy trên CrazyGames: áp dụng bình thường.
+   Khi chạy trên Itch.io / local: hoàn toàn bị vô hiệu hoá.
+   Class `platform-crazygames` được JS thêm vào <body> khi
+   phát hiện URL chứa "crazygames".
+   ────────────────────────────────────────────────────────── */
+body.platform-crazygames {
+  /* ═══ CRAZYGAMES AD UI STYLES — chỉ có hiệu lực trên CrazyGames ═══ */
+  @keyframes cgAdPulse {
+  0% { transform: scale(1); box-shadow: 0 0 18px rgba(255, 208, 0, 0.6); }
+  50% { transform: scale(1.05); box-shadow: 0 0 32px rgba(255, 208, 0, 0.95), 0 0 50px rgba(255, 123, 0, 0.6); }
+  100% { transform: scale(1); box-shadow: 0 0 18px rgba(255, 208, 0, 0.6); }
+}
+#rewardAdSection {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  margin: 18px 0 10px;
+  width: 100%;
+  z-index: 50;
+}
+.rewardAdBtn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 16px 34px;
+  background: linear-gradient(135deg, #ffd000 0%, #ff9e00 55%, #ff7b00 100%);
+  border: 2px solid #ffffff;
+  border-radius: 14px;
+  color: #000000;
+  font-family: var(--ui-font, 'Trebuchet MS', sans-serif);
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  pointer-events: auto;
+  animation: cgAdPulse 2.4s infinite ease-in-out;
+  transition: filter 0.2s, transform 0.1s;
+}
+.rewardAdBtn:hover {
+  filter: brightness(1.15);
+}
+.rewardAdBtn:active {
+  transform: scale(0.98);
+}
+.rewardAdBtn .adBadge {
+  background: #02010a;
+  color: #ffd000;
+  font-size: 13px;
+  font-weight: 900;
+  padding: 4px 10px;
+  border-radius: 6px;
+  letter-spacing: 1.5px;
+  box-shadow: inset 0 0 6px rgba(255,208,0,0.4);
+}
+#adSkipContainer {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+#adLoadingBarWrap {
+  width: 200px;
+  height: 6px;
+  background: rgba(255,255,255,0.12);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 6px;
+  border: 1px solid rgba(255,208,0,0.3);
+}
+#adLoadingBar {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, #ffd000, #ff7b00);
+}
+#adLoadingText {
+  font-size: 12px;
+  color: #bbb;
+  letter-spacing: 1px;
+}
+/* ═══ END CRAZYGAMES AD UI STYLES ═══ */
+}
+/* ── END Platform-aware Ad UI Styles ──────────────────────── */
+
+/* ═══════════════════════════════════════════════════════════
+   CROSS-PLATFORM AD SAFETY
+   Đảm bảo ad UI hoàn toàn ẩn trên non-CrazyGames platforms.
+   Các phần tử này chỉ hiện khi body có class platform-crazygames.
+   ═══════════════════════════════════════════════════════════ */
+#rewardAdSection,
+#rewardReviveBtn,
+#adSkipContainer,
+#adLoadingBarWrap,
+#adLoadingBar {
+  display: none !important;
+}
+body.platform-crazygames #rewardAdSection {
+  display: flex !important;
+}
 </style>
+
+/* ─────────────────────────────────────────────────────────────
+   PLATFORM DETECTION — tự nhận diện nền tảng đang chạy game
+   CrazyGames:  URL chứa "crazygames"
+   Itch.io:     URL chứa "itch.io"
+   Local/test:  tất cả domain khác (localhost, file://, v.v.)
+   ───────────────────────────────────────────────────────────── */
+(function initPlatform() {
+  var href = (window.location && window.location.href) || '';
+  var IS_CRAZY = /crazygames/i.test(href);
+  var IS_ITCH  = /itch\.io/i.test(href);
+
+  window.__PLATFORM__ = IS_CRAZY ? 'crazygames' : (IS_ITCH ? 'itchio' : 'other');
+  console.log('[Platform] Detected: ' + window.__PLATFORM__ + ' | ' + href);
+
+  /* Lazy-load CrazyGames SDK v3 only when on CrazyGames domain.
+     All ad logic (CSS, HTML, JS) stays in the file — SDK init()
+     gracefully skips / auto-revives on non-CrazyGames environments. */
+  if (IS_CRAZY) {
+    var sdk = document.createElement('script');
+    sdk.src = 'https://sdk.crazygames.com/crazygames-sdk-v3.js';
+    sdk.async = true;
+    document.head.appendChild(sdk);
+    console.log('[Platform] Loading CrazyGames SDK v3…');
+    /* Kích hoạt CSS đặc biệt cho quảng cáo CrazyGames */
+    document.body.classList.add('platform-crazygames');
+  } else {
+    /* Itch.io / Local — không nạp SDK, quảng cáo bị vô hiệu hoá */
+    console.log('[Platform] Non-CrazyGames build — ads disabled.');
+  }
+})();
+/* ─────────────────────────────────────────────────────────────
+   END PLATFORM DETECTION
+   ───────────────────────────────────────────────────────────── */
 </head>
 <body>
 <canvas id="bg"></canvas>
@@ -1249,6 +1397,16 @@ body.mobile-mode .craft-grid {
     <span>MUSIC</span><input id="volSlider" type="range" min="0" max="100" value="45">
     <span>SFX</span><input id="sfxSlider" type="range" min="0" max="100" value="50">
   </div>
+  <div class="musicPanel" id="musicPanel">
+    <div class="musicPanelTitle" id="musicPanelTitle">BACKGROUND MUSIC PLAYLIST</div>
+    <div class="musicPlaylistRow" id="musicTrackRow"></div>
+    <div class="musicModeRow" id="musicModeRow">
+      <button class="togBtn musicModeBtn" data-mode="manual">MANUAL</button>
+      <button class="togBtn musicModeBtn" data-mode="repeat-one">REPEAT ONE</button>
+      <button class="togBtn musicModeBtn" data-mode="playlist">PLAYLIST</button>
+    </div>
+    <div class="musicStatus" id="musicStatus">Track 1 ready · Track 2/3 load from system URLs on first play</div>
+  </div>
   <div class="audioRow">
     <button class="togBtn" id="clearDataBtn" style="min-width:260px;border-color:rgba(255,92,92,.55);color:#ff6b8a;background:rgba(40,8,18,.85)">🧹 RESET ALL DATA</button>
   </div>
@@ -1289,7 +1447,23 @@ body.mobile-mode .craft-grid {
     <div class="dbtn" data-d="2"><div class="dn ti">HARD</div><div class="dd">No mercy</div></div>
     <div class="dbtn" data-d="3"><div class="dn ti">HELL</div><div class="dd">Insanity</div></div>
   </div>
-  <div class="splashActionRow"><button class="btn ti" id="startBtn">INITIATE</button><button class="btn ti" id="continueBtn">CONTINUE</button></div>
+  
+  <!-- CrazyGames Rewarded Ad Revive Section -->
+  <div id="rewardAdSection">
+    <button id="rewardReviveBtn" class="rewardAdBtn" onclick="requestReviveAd()">
+      <span style="font-size: 22px;">🎁</span>
+      <span id="rewardReviveBtnTxt">XEM QUẢNG CÁO ĐỂ HỒI SINH</span>
+      <span class="adBadge">ADS</span>
+    </button>
+    <div id="adSkipContainer">
+      <div id="adLoadingBarWrap">
+        <div id="adLoadingBar"></div>
+      </div>
+      <span id="adLoadingText">Hiện nút bỏ qua sau 3s...</span>
+    </div>
+  </div>
+  <div class="splashActionRow">
+<button class="btn ti" id="startBtn">INITIATE</button><button class="btn ti" id="continueBtn">CONTINUE</button></div>
   <button class="menuBtn" id="tutorialBtn" style="margin-top:10px;border-color:rgba(31,182,201,.45);color:#1fb6c9;min-width:230px">📘 HOW TO PLAY</button>
   <button class="menuBtn" id="deathMenuBtn" style="display:none;margin-top:12px">MAIN MENU</button>
   <button class="menuBtn" id="menuShopBtn" style="margin-top:14px;border-color:rgba(255,208,0,.5);color:#ffd000">💰 SHOP</button>
@@ -1652,6 +1826,7 @@ function applyLang(){
   const audioSpans = document.querySelectorAll('.audioRow span');
   if (audioSpans[0]) audioSpans[0].textContent = currentLang === 'vi' ? 'NHẠC' : 'MUSIC';
   if (audioSpans[1]) audioSpans[1].textContent = currentLang === 'vi' ? 'ÂM HIỆU' : 'SFX';
+  if(typeof renderMusicControls==='function')renderMusicControls();
   if(typeof setPhase==='function'&&player)setPhase();
   document.querySelectorAll('.dbtn').forEach(b=>{const dn=b.querySelector('.dn'),dd=b.querySelector('.dd');const names=['EASY','NORMAL','HARD','HELL'],descs=['Relaxed','Balanced','No mercy','Insanity'];const idx=Number(b.dataset.d)||0;if(dn)dn.textContent=TT(names[idx]||names[0]);if(dd)dd.textContent=TT(descs[idx]||descs[0]);});
   const gfxDescs = document.querySelectorAll('.gfxBtn .gd');
@@ -1696,13 +1871,151 @@ function glow(sx,sy,color,size,alpha=1){if(!glowOn()||lowQuality)return;const s=
 
 /* AUDIO */
 const MUSIC_URL='https://zpjytemhwprepninzlgc.supabase.co/storage/v1/object/public/assets/Favela%20cyberware%20-%20sonauto.mp3';
+const MUSIC_REMOTE_URLS=[
+  'https://zpjytemhwprepninzlgc.supabase.co/storage/v1/object/public/assets/Nebula%20Night%20Drive%20-%20Underground%20Ascendance%20-%20Treblo.mp3',
+  'https://zpjytemhwprepninzlgc.supabase.co/storage/v1/object/public/assets/Nebula%20Night%20Drive%20-%20Heavens%20Above%20Sao%20Paulo%20-%20Treblo.mp3'
+];
+const MUSIC_MODES={MANUAL:'manual',REPEAT_ONE:'repeat-one',PLAYLIST:'playlist'};
+const MUSIC_MODE_LABELS={
+  manual:{en:'MANUAL',vi:'PHÁT ĐƠN'},
+  'repeat-one':{en:'REPEAT ONE',vi:'LẶP 1 BÀI'},
+  playlist:{en:'PLAYLIST',vi:'LUÂN PHIÊN'}
+};
+const BGM_PLAYLIST=[
+  {id:'track1',title:'Bài 1',titleEn:'Track 1',src:MUSIC_URL,system:false,ready:true,status:'ready'},
+  {id:'track2',title:'Bài 2',titleEn:'Track 2',src:null,remoteUrl:MUSIC_REMOTE_URLS[0],system:true,ready:false,status:'idle'},
+  {id:'track3',title:'Bài 3',titleEn:'Track 3',src:null,remoteUrl:MUSIC_REMOTE_URLS[1],system:true,ready:false,status:'idle'}
+];
+let musicMode=Object.values(MUSIC_MODES).includes(savedSettings.musicMode)?savedSettings.musicMode:MUSIC_MODES.PLAYLIST;
+let currentMusicIndex=Number.isInteger(savedSettings.musicIndex)?Math.max(0,Math.min(BGM_PLAYLIST.length-1,savedSettings.musicIndex)):0;
+let musicLoadPromise=null;
 let AC=null,sfxGain=null,musicEl=null,musicOn=false,vol=Number.isFinite(savedSettings.vol)?savedSettings.vol:0.45,sfxVol=Number.isFinite(savedSettings.sfxVol)?savedSettings.sfxVol:0.5,autoFire=!!savedSettings.autoFire,musicWanted=!!savedSettings.musicWanted;
 let sfxPerFrame=0;const MAX_SFX_PER_FRAME=10;
-function initAudio(){if(AC){if(AC.state==='suspended')AC.resume().catch(()=>{});tryStartMusic();return;}try{AC=new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume().catch(()=>{});sfxGain=AC.createGain();sfxGain.gain.value=sfxVol;sfxGain.connect(AC.destination);}catch(e){}
-  if(!musicEl){musicEl=new Audio();musicEl.src=MUSIC_URL;musicEl.loop=true;if(location.protocol!=='file:')musicEl.crossOrigin='anonymous';musicEl.volume=vol;}
-  tryStartMusic();}
-function tryStartMusic(){if(!musicWanted)return;if(!musicEl){musicEl=new Audio();musicEl.src=MUSIC_URL;musicEl.loop=true;if(location.protocol!=='file:')musicEl.crossOrigin='anonymous';}
-  musicEl.volume=vol;musicEl.play().then(()=>{musicOn=true;updMusicBtn();}).catch(()=>{musicOn=false;updMusicBtn();});}
+function musicLang(en,vi){return currentLang==='vi'?vi:en;}
+function getTrackLabel(i){const t=BGM_PLAYLIST[i];return currentLang==='vi'?t.title:t.titleEn;}
+async function preloadRemoteMusicTrack(track){
+  if(!track||track.ready)return track;
+  if(track.promise)return track.promise;
+  track.status='loading';renderMusicControls();
+  track.promise=(async()=>{
+    try{
+      // Web/WebFX-safe async loader: fetch the MP3, convert to Blob URL, then add it to the active playlist.
+      const res=await fetch(track.remoteUrl,{mode:'cors',cache:'force-cache'});
+      if(!res.ok)throw new Error('HTTP '+res.status);
+      const blob=await res.blob();
+      if(track.objectUrl)URL.revokeObjectURL(track.objectUrl);
+      track.objectUrl=URL.createObjectURL(blob);
+      track.src=track.objectUrl;
+      track.ready=true;track.status='ready';track.error='';
+    }catch(err){
+      // Fallback keeps the playlist usable even if this runtime blocks fetch/CORS; HTMLAudioElement can still stream the public URL.
+      console.warn('Music preload failed, fallback to direct URL:',track.remoteUrl,err);
+      track.src=track.remoteUrl;
+      track.ready=true;track.status='fallback';track.error=String(err&&err.message||err);
+    }
+    renderMusicControls();return track;
+  })();
+  return track.promise;
+}
+function loadAdditionalMusicTracks(){
+  if(musicLoadPromise)return musicLoadPromise;
+  musicLoadPromise=Promise.all(BGM_PLAYLIST.filter(t=>t.system).map(preloadRemoteMusicTrack)).then(()=>BGM_PLAYLIST);
+  return musicLoadPromise;
+}
+async function ensureMusicTrack(index){
+  index=(index+BGM_PLAYLIST.length)%BGM_PLAYLIST.length;
+  const t=BGM_PLAYLIST[index];
+  if(!t.ready&&t.remoteUrl)await preloadRemoteMusicTrack(t);
+  return t;
+}
+function configureMusicElement(){
+  if(!musicEl)return;
+  musicEl.volume=vol;
+  musicEl.loop=musicMode===MUSIC_MODES.REPEAT_ONE;
+  musicEl.onended=handleMusicEnded;
+}
+function setMusicSource(trackIndex){
+  if(!musicEl)return;
+  const t=BGM_PLAYLIST[trackIndex]||BGM_PLAYLIST[0];
+  const src=t.src||t.remoteUrl||MUSIC_URL;
+  if(musicEl.src!==src){musicEl.src=src;musicEl.load();}
+  configureMusicElement();
+}
+function initAudio(){
+  if(AC){if(AC.state==='suspended')AC.resume().catch(()=>{});loadAdditionalMusicTracks();tryStartMusic();return;}
+  try{AC=new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume().catch(()=>{});sfxGain=AC.createGain();sfxGain.gain.value=sfxVol;sfxGain.connect(AC.destination);}catch(e){}
+  if(!musicEl){musicEl=new Audio();if(location.protocol!=='file:')musicEl.crossOrigin='anonymous';configureMusicElement();setMusicSource(currentMusicIndex);}
+  loadAdditionalMusicTracks();
+  tryStartMusic();
+}
+async function tryStartMusic(){
+  if(!musicWanted)return;
+  if(!musicEl){musicEl=new Audio();if(location.protocol!=='file:')musicEl.crossOrigin='anonymous';configureMusicElement();}
+  try{
+    await ensureMusicTrack(currentMusicIndex);
+    setMusicSource(currentMusicIndex);
+    musicEl.volume=vol;
+    await musicEl.play();
+    musicOn=true;updMusicBtn();renderMusicControls();
+  }catch(err){musicOn=false;updMusicBtn();renderMusicControls();}
+}
+function handleMusicEnded(){
+  musicOn=false;
+  if(musicMode===MUSIC_MODES.PLAYLIST){
+    currentMusicIndex=(currentMusicIndex+1)%BGM_PLAYLIST.length;
+    if(typeof saveSettings==='function')saveSettings();
+    musicWanted=true;
+    tryStartMusic();
+  }else if(musicMode===MUSIC_MODES.REPEAT_ONE){
+    // Normally handled by audio.loop; this fallback covers browsers that still fire ended.
+    if(musicEl){musicEl.currentTime=0;tryStartMusic();}
+  }else{
+    // Manual mode: play selected track once, then stop.
+    musicWanted=false;updMusicBtn();renderMusicControls();if(typeof saveSettings==='function')saveSettings();
+  }
+}
+function selectMusicTrack(index,autoPlay=true){
+  currentMusicIndex=(index+BGM_PLAYLIST.length)%BGM_PLAYLIST.length;
+  renderMusicControls();
+  if(autoPlay){musicWanted=true;initAudio();tryStartMusic();}
+  if(typeof saveSettings==='function')saveSettings();
+}
+function setMusicMode(mode){
+  if(!Object.values(MUSIC_MODES).includes(mode))mode=MUSIC_MODES.MANUAL;
+  musicMode=mode;configureMusicElement();renderMusicControls();if(typeof saveSettings==='function')saveSettings();
+}
+function renderMusicControls(){
+  const row=document.getElementById('musicTrackRow');
+  if(row){
+    row.innerHTML='';
+    BGM_PLAYLIST.forEach((t,i)=>{
+      const b=document.createElement('button');
+      b.className='musicTrackBtn';
+      b.classList.toggle('sel',i===currentMusicIndex);
+      b.classList.toggle('loading',t.status==='loading');
+      b.classList.toggle('error',t.status==='fallback');
+      const suffix=t.status==='loading'?' …':(t.status==='fallback'?' ⚠':'');
+      b.textContent=getTrackLabel(i)+suffix;
+      b.title=t.remoteUrl||t.src||'';
+      b.onclick=()=>selectMusicTrack(i,true);
+      row.appendChild(b);
+    });
+  }
+  document.querySelectorAll('.musicModeBtn').forEach(b=>{
+    const mode=b.dataset.mode;
+    const lab=MUSIC_MODE_LABELS[mode]||{en:mode,vi:mode};
+    b.textContent=currentLang==='vi'?lab.vi:lab.en;
+    b.classList.toggle('on',musicMode===mode);
+  });
+  const title=document.getElementById('musicPanelTitle');if(title)title.textContent=musicLang('BACKGROUND MUSIC PLAYLIST','DANH SÁCH NHẠC NỀN');
+  const st=document.getElementById('musicStatus');
+  if(st){
+    const loading=BGM_PLAYLIST.filter(t=>t.status==='loading').length;
+    const ready=BGM_PLAYLIST.filter(t=>t.ready).length;
+    const modeLabel=(MUSIC_MODE_LABELS[musicMode]||{});const ml=currentLang==='vi'?modeLabel.vi:modeLabel.en;
+    st.textContent=loading?musicLang('Loading system tracks…','Đang tải nhạc hệ thống…'):`${getTrackLabel(currentMusicIndex)} · ${ml} · ${ready}/${BGM_PLAYLIST.length} ${musicLang('ready','sẵn sàng')}`;
+  }
+}
 let sharedNoiseBuffer=null;
 function getSharedNoiseBuffer(){if(!AC)return null;if(sharedNoiseBuffer)return sharedNoiseBuffer;const len=AC.sampleRate;const buf=AC.createBuffer(1,len,AC.sampleRate);const d=buf.getChannelData(0);for(let i=0;i<len;i++)d[i]=Math.random()*2-1;sharedNoiseBuffer=buf;return buf;}
 function blip(freq,dur,type,v,slide){if(!AC||sfxPerFrame>=MAX_SFX_PER_FRAME)return;sfxPerFrame++;const o=AC.createOscillator(),g=AC.createGain();o.type=type||'square';o.frequency.value=freq;if(slide)o.frequency.exponentialRampToValueAtTime(Math.max(40,freq*slide),AC.currentTime+dur);g.gain.setValueAtTime(v||0.2,AC.currentTime);g.gain.exponentialRampToValueAtTime(0.001,AC.currentTime+dur);o.connect(g);g.connect(sfxGain);o.onended=()=>{try{o.disconnect();g.disconnect();}catch(e){}};o.start();o.stop(AC.currentTime+dur);}
@@ -1718,9 +2031,10 @@ const SFX={gun:()=>blip(620,0.08,'square',0.12,0.4),sword:()=>{blip(300,0.12,'sa
   _lastKill:0,
   achieve:()=>{blip(660,0.15,'square',0.2,1.5);setTimeout(()=>blip(880,0.18,'triangle',0.22,1.3),100);setTimeout(()=>blip(1100,0.2,'sine',0.18,1.2),200);}
 };
-function toggleMusic(){musicWanted=!musicWanted;initAudio();if(musicWanted){if(musicEl){musicEl.volume=vol;musicEl.play().then(()=>{musicOn=true;updMusicBtn();}).catch(()=>{musicOn=false;updMusicBtn();});}}else{if(musicEl)musicEl.pause();musicOn=false;updMusicBtn();}if(typeof saveSettings==='function')saveSettings();}
+function toggleMusic(){musicWanted=!musicWanted;initAudio();if(musicWanted){tryStartMusic();}else{if(musicEl)musicEl.pause();musicOn=false;updMusicBtn();renderMusicControls();}if(typeof saveSettings==='function')saveSettings();}
 function updMusicBtn(){const b=document.getElementById('musicToggle');if(!b)return;b.textContent=TT(musicWanted?(musicOn?'MUSIC ON':'MUSIC READY'):'MUSIC OFF');b.classList.toggle('on',musicWanted);b.title=musicWanted&&!musicOn?'Music will start after browser/network allows playback.':'';}
 updMusicBtn();
+renderMusicControls();
 
 const CAP_ENEMIES=160,CAP_GHOSTS=44,CAP_ORBS=280;
 let dynParticleCap=400;
@@ -2155,7 +2469,7 @@ function syncMobileUI(){
 function setMobileMode(on){mobileMode=!!on;syncMobileUI();resize();if(!mobileMode){mobileInput.moveX=mobileInput.moveY=0;mobileInput.aimActive=false;mobileInput.fire=false;}}
 syncMobileUI();
 
-function saveSettings(){if(__npSuppressAutoSave) return;saveJSON(STORE.settings,{gfx:GFX,shake:screenShakeEnabled,reduceMotion,colorIntensity,textScale,vol,sfxVol,autoFire,musicWanted,mobileMode,mobileLowPerf,fpsCap,lang:currentLang,leftHanded,mobileCombatScale,mobileOpacity});}
+function saveSettings(){if(__npSuppressAutoSave) return;saveJSON(STORE.settings,{gfx:GFX,shake:screenShakeEnabled,reduceMotion,colorIntensity,textScale,vol,sfxVol,autoFire,musicWanted,musicMode,musicIndex:currentMusicIndex,mobileMode,mobileLowPerf,fpsCap,lang:currentLang,leftHanded,mobileCombatScale,mobileOpacity});}
 function setFpsCap(v){
   fpsCap=[30,60,90,120].includes(v)?v:60;
   lastRenderTs=0;
@@ -2187,7 +2501,7 @@ function updateSettingsButtons(){
   const ct=document.getElementById('colorToggle');if(ct){ct.textContent=TT('COLOR')+' '+Math.round(colorIntensity*100)+'%';ct.classList.toggle('on',colorIntensity>=1);}
   const tt=document.getElementById('textToggle');if(tt){tt.textContent=TT('TEXT')+' '+Math.round(textScale*100)+'%';tt.classList.toggle('on',textScale>1);}
   const lb=document.getElementById('langToggle');if(lb){lb.textContent='🌐 '+currentLang.toUpperCase();lb.classList.toggle('on',currentLang==='vi');}
-  const vs=document.getElementById('volSlider');if(vs)vs.value=Math.round(vol*100);const ss=document.getElementById('sfxSlider');if(ss)ss.value=Math.round(sfxVol*100);updMusicBtn();updateMobileLabel();
+  const vs=document.getElementById('volSlider');if(vs)vs.value=Math.round(vol*100);const ss=document.getElementById('sfxSlider');if(ss)ss.value=Math.round(sfxVol*100);updMusicBtn();renderMusicControls();updateMobileLabel();
   updateFpsCapButtons();
 }
 applySettingsVisuals();updateSettingsButtons();applyLang();
@@ -2405,6 +2719,7 @@ const settingsMenuBtn=document.getElementById('settingsMenuBtn');if(settingsMenu
 const deathMenuBtn=document.getElementById('deathMenuBtn');if(deathMenuBtn)deathMenuBtn.onclick=()=>backToMenu();
 const pStatsBtn=document.getElementById('pStatsBtn');if(pStatsBtn)pStatsBtn.onclick=()=>openStatPanel();
 document.getElementById('musicToggle').onclick=()=>toggleMusic();
+document.querySelectorAll('.musicModeBtn').forEach(b=>b.onclick=()=>setMusicMode(b.dataset.mode));
 document.getElementById('autoToggle').onclick=()=>{autoFire=!autoFire;updateSettingsButtons();saveSettings();};
 document.getElementById('screenShakeToggle').onclick=()=>{screenShakeEnabled=!screenShakeEnabled;updateSettingsButtons();saveSettings();};
 const motionToggle=document.getElementById('motionToggle');if(motionToggle)motionToggle.onclick=()=>{reduceMotion=!reduceMotion;applySettingsVisuals();updateSettingsButtons();applyLang();saveSettings();};
@@ -2415,7 +2730,7 @@ const tutorialBtn=document.getElementById('tutorialBtn');if(tutorialBtn)tutorial
 const tutorialCloseBtn=document.getElementById('tutorialCloseBtn');if(tutorialCloseBtn)tutorialCloseBtn.onclick=()=>closeTutorial();
 const splashStatsToggle=document.getElementById('splashStatsToggle');if(splashStatsToggle)splashStatsToggle.onclick=()=>toggleSplashStats();
 const clearDataBtn=document.getElementById('clearDataBtn');if(clearDataBtn)clearDataBtn.onclick=()=>clearAllGameData();
-document.getElementById('volSlider').oninput=e=>{vol=e.target.value/100;if(musicEl)musicEl.volume=vol;saveSettings();};
+document.getElementById('volSlider').oninput=e=>{vol=e.target.value/100;if(musicEl)musicEl.volume=vol;renderMusicControls();saveSettings();};
 document.getElementById('sfxSlider').oninput=e=>{sfxVol=e.target.value/100;if(sfxGain)sfxGain.gain.value=sfxVol;saveSettings();};
 
 const questToggle=document.getElementById('questToggle');
@@ -3943,7 +4258,11 @@ function die(){const d=1200;formWipe={t:0,duration:d};transitionTimer=d;SceneMan
     <div class="row"><b>${TT('DMG DEALT')}</b><span>${Math.round(stats.dmgDealt)}</span></div><div class="row"><b>${TT('DMG TAKEN')}</b><span>${Math.round(stats.dmgTaken)}</span></div>
     <div class="row"><b>${TT('Gold Earned')}</b><span>${stats.goldEarned}</span></div><div class="row"><b>${TT('MAX COMBO')}</b><span>${stats.maxCombo}</span></div>
     <div class="row"><b>${TT('DIFFICULTY')}</b><span>${TT(DIFF[difficulty].name)}</span></div><div class="up">${TT('UPGRADES')}: ${ups==='None'?TT('None'):ups}</div>`, false);
-  document.getElementById('startBtn').textContent=TT('RETRY');const dmb=document.getElementById('deathMenuBtn');if(dmb)dmb.style.display='inline-block';const msb=document.getElementById('menuShopBtn');if(msb)msb.style.display='none';const mst=document.getElementById('menuSettingsBtn');if(mst)mst.style.display='none';}
+  document.getElementById('startBtn').textContent=TT('RETRY');const dmb=document.getElementById('deathMenuBtn');if(dmb)dmb.style.display='inline-block';const msb=document.getElementById('menuShopBtn');if(msb)msb.style.display='none';const mst=document.getElementById('menuSettingsBtn');if(mst)mst.style.display='none';
+  /* [CG-FIX] Trigger rewarded ad UI on death */
+  console.log("[CG] PLAYER DEAD");
+  if(typeof triggerGameOverAdUI==='function') triggerGameOverAdUI();
+}
 
 const stars=[];for(let i=0;i<160;i++)stars.push({x:Math.random(),y:Math.random(),z:rand(0.2,1),c:['#e0418a','#1fb6c9','#8c6fd6','#fff'][randi(0,4)]});
 let bgt=0;
@@ -5753,10 +6072,354 @@ function installSpringButtons(){
 installSpringButtons();
 requestAnimationFrame(loop);
 
+/* ==========================================================================
+   [CG-FIX v4] CRAZYGAMES SDK v3 — ASYNC INIT + REWARDED AD REVIVE
+   ─────────────────────────────────────────────────────────────────
+   INSIDE the IIFE → full access to: state, player, score, stats,
+   enemies, ebullets, bossLasers, last, die, newGame, backToMenu,
+   burst, ring, showBanner, floatText, updateHUD, syncMobileUI,
+   AC, musicEl, currentLang, TT, L
+   ─────────────────────────────────────────────────────────────────
+   FIXES:
+   1. Calls  await window.CrazyGames.SDK.init()  before any ad call
+   2. Uses flag  __cgSDKInitialized  (true only AFTER init resolves)
+   3. If init fails / CORS / adblock → auto-skip ad, revive directly
+   4. Entire flow wrapped in try/catch → game NEVER freezes
+   ========================================================================== */
 
+let __cgSDKInitialized = false;   // true ONLY after init() resolves
+let __cgSDKEnv = 'unknown';       // 'local' | 'crazygames' | 'disabled'
+let __cgHasRevivedThisRun = false;
+let __cgIsAdPlaying = false;
+let __cgAdSkipTimer = null;
+let __cgWasMusicPlaying = false;
+
+// ──────────────────────────────────────────────
+// 1.  ASYNC SDK INIT  (runs immediately, non-blocking)
+// ──────────────────────────────────────────────
+(async function __cgBootstrap() {
+  try {
+    // Guard: SDK script not loaded at all (blocked, wrong URL…)
+    if (!window.CrazyGames || !window.CrazyGames.SDK) {
+      console.warn('[CG] SDK script not found on window. Ads will auto-skip.');
+      return;                       // __cgSDKInitialized stays false
+    }
+
+    console.log('[CG] SDK object found. Calling init()…');
+    await window.CrazyGames.SDK.init();          // ← THE critical await
+    __cgSDKInitialized = true;
+
+    // Cache environment for later checks
+    __cgSDKEnv = window.CrazyGames.SDK.environment || 'unknown';
+    console.log('[CG] SDK READY  ✔  env=' + __cgSDKEnv);
+
+    // Report gameplay-loading events (CrazyGames best practice)
+    if (window.CrazyGames.SDK.game) {
+      try { window.CrazyGames.SDK.game.sdkGameLoadingStart
+            ? window.CrazyGames.SDK.game.sdkGameLoadingStart()
+            : window.CrazyGames.SDK.game.loadingStart(); } catch(_){}
+    }
+  } catch (err) {
+    // init() threw → CORS / ERR_FAILED / disabled environment / adblock
+    console.warn('[CG] SDK init() FAILED:', err);
+    __cgSDKInitialized = false;     // explicit
+    // Game still works, ads auto-skip → player never stuck
+  }
+})();
+
+// ──────────────────────────────────────────────
+// 2.  HOOK  newGame / backToMenu  (reset per-run state)
+// ──────────────────────────────────────────────
+const __cgOrigNewGame = newGame;
+newGame = function() {
+  __cgHasRevivedThisRun = false;
+  hideRewardAdUI();
+
+  // CrazyGames best practice: report gameplay start
+  if (__cgSDKInitialized && window.CrazyGames.SDK.game) {
+    try { window.CrazyGames.SDK.game.gameplayStart(); } catch(_){}
+  }
+
+  return __cgOrigNewGame.apply(this, arguments);
+};
+
+const __cgOrigBackToMenu = backToMenu;
+backToMenu = function() {
+  __cgHasRevivedThisRun = false;
+  hideRewardAdUI();
+
+  // CrazyGames best practice: report gameplay stop
+  if (__cgSDKInitialized && window.CrazyGames.SDK.game) {
+    try { window.CrazyGames.SDK.game.gameplayStop(); } catch(_){}
+  }
+
+  return __cgOrigBackToMenu.apply(this, arguments);
+};
+
+// ──────────────────────────────────────────────
+// 3.  REVIVE PLAYER  (shared helper — called by ad-finish AND auto-skip)
+// ──────────────────────────────────────────────
+function __cgRevivePlayer() {
+  console.log('[CG] PLAYER REVIVED');
+  __cgHasRevivedThisRun = true;
+
+  // Resume audio
+  if (AC && AC.state === 'suspended') AC.resume().catch(() => {});
+  if (__cgWasMusicPlaying && musicEl) musicEl.play().catch(() => {});
+
+  state = 'playing';
+  hideRewardAdUI();
+
+  const sp = document.getElementById('splash');
+  if (sp) sp.classList.add('hide');
+
+  if (player) {
+    player.dead = false;
+    player.hp = player.maxHp || 100;
+    player.shield = player.maxShield || 0;
+    player.iframe = 180;
+  }
+
+  // Clear dangerous projectiles
+  if (Array.isArray(ebullets)) ebullets.length = 0;
+  if (Array.isArray(bossLasers)) {
+    for (const bl of bossLasers) bl.active = 0;
+  }
+
+  // Push nearby enemies away from player
+  if (Array.isArray(enemies) && player) {
+    for (const e of enemies) {
+      if (!e || e.dead) continue;
+      const dx = e.x - player.x, dy = e.y - player.y;
+      const d = Math.hypot(dx, dy);
+      if (d < 350 && d > 0.001) {
+        const push = (350 - d) * 0.8;
+        e.x += (dx / d) * push;
+        e.y += (dy / d) * push;
+      }
+    }
+  }
+
+  last = performance.now();
+  score += 1000;
+  stats.gold = (stats.gold || 0) + 150;
+
+  showBanner('REWARD REVIVE! +150 GOLD', '#ffd000');
+  if (player) {
+    burst(player.x, player.y, '#ffd000', 60, 12, 100);
+    ring(player.x, player.y, '#16c98a', 10, 250, 40);
+  }
+  updateHUD();
+  syncMobileUI();
+}
+
+// ──────────────────────────────────────────────
+// 4.  HIDE  reward-ad UI  (restore death-screen buttons)
+// ──────────────────────────────────────────────
+function hideRewardAdUI() {
+  const sec = document.getElementById('rewardAdSection');
+  if (sec) sec.style.display = 'none';
+  if (__cgAdSkipTimer) { clearTimeout(__cgAdSkipTimer); __cgAdSkipTimer = null; }
+
+  ['.splashActionRow', '#deathMenuBtn', '#tutorialBtn',
+   '#menuShopBtn', '#menuSettingsBtn'].forEach(sel => {
+    const el = sel[0] === '#'
+      ? document.getElementById(sel.slice(1))
+      : document.querySelector(sel);
+    if (el) { el.style.opacity = '1'; el.style.pointerEvents = 'auto'; }
+  });
+}
+
+// ──────────────────────────────────────────────
+// 5.  SHOW  reward-ad button on Game Over screen
+// ──────────────────────────────────────────────
+function triggerGameOverAdUI() {
+  console.log('[CG] SHOW REVIVE BUTTON');
+
+  if (__cgHasRevivedThisRun) {
+    console.log('[CG] Already revived this run — skipping ad button.');
+    return;
+  }
+
+  const sec = document.getElementById('rewardAdSection');
+  if (!sec) { console.warn('[CG] #rewardAdSection not in DOM.'); return; }
+
+  // Force section fully visible (anti-CSS-hide)
+  sec.style.cssText = 'display:flex!important;visibility:visible!important;' +
+    'opacity:1!important;z-index:1000!important;pointer-events:auto!important;' +
+    'flex-direction:column;align-items:center;margin:18px 0 10px;width:100%;';
+
+  const btnTxt = document.getElementById('rewardReviveBtnTxt');
+  if (btnTxt) {
+    btnTxt.textContent = currentLang === 'vi'
+      ? '🎬 XEM QUẢNG CÁO ĐỂ HỒI SINH'
+      : '🎬 WATCH AD TO REVIVE';
+  }
+
+  const btn = document.getElementById('rewardReviveBtn');
+  if (btn) {
+    btn.style.display = 'flex';
+    btn.style.visibility = 'visible';
+    btn.style.opacity = '1';
+    btn.style.pointerEvents = 'auto';
+  }
+
+  // Dim other buttons for 3 s
+  const otherSels = ['.splashActionRow', '#deathMenuBtn',
+    '#tutorialBtn', '#menuShopBtn', '#menuSettingsBtn'];
+  const others = otherSels.map(s => s[0] === '#'
+    ? document.getElementById(s.slice(1))
+    : document.querySelector(s));
+  others.forEach(el => {
+    if (el) {
+      el.style.transition = 'opacity 0.8s ease';
+      el.style.opacity = '0.25';
+      el.style.pointerEvents = 'none';
+    }
+  });
+
+  // Countdown bar
+  const bar  = document.getElementById('adLoadingBar');
+  const wrap = document.getElementById('adLoadingBarWrap');
+  const txt  = document.getElementById('adLoadingText');
+  if (wrap) wrap.style.display = 'block';
+  if (txt) {
+    txt.style.display = 'block';
+    txt.textContent = currentLang === 'vi'
+      ? 'Có thể bỏ qua sau 3s…' : 'Skip available in 3s…';
+  }
+  if (bar) {
+    bar.style.transition = 'none'; bar.style.width = '0%';
+    void bar.offsetWidth;
+    bar.style.transition = 'width 3s linear'; bar.style.width = '100%';
+  }
+
+  if (__cgAdSkipTimer) clearTimeout(__cgAdSkipTimer);
+  __cgAdSkipTimer = setTimeout(() => {
+    if (wrap) wrap.style.display = 'none';
+    if (txt)  txt.style.display  = 'none';
+    others.forEach(el => {
+      if (el) { el.style.opacity = '1'; el.style.pointerEvents = 'auto'; }
+    });
+    console.log('[CG] 3 s elapsed — Retry buttons re-enabled.');
+  }, 3000);
+}
+
+// ──────────────────────────────────────────────
+// 6.  REQUEST REWARDED AD  (called from HTML onclick)
+// ──────────────────────────────────────────────
+window.requestReviveAd = function() {
+  console.log('[CG] REVIVE BUTTON CLICKED');
+
+  /* ── GUARD: SDK never initialised ──
+     This catches: CORS block, adblock, disabled env, script 404…
+     → AUTO-SKIP the ad and revive the player immediately so the game
+       NEVER freezes on the death screen.                              */
+  if (!__cgSDKInitialized) {
+    console.warn('[CG] SDK not initialised — auto-skipping ad, reviving player.');
+    __cgRevivePlayer();
+    return;
+  }
+
+  /* ── GUARD: disabled environment ──
+     On non-CrazyGames/non-localhost domains the SDK throws on every call. */
+  if (__cgSDKEnv === 'disabled') {
+    console.warn('[CG] SDK env=disabled — auto-skipping ad, reviving player.');
+    __cgRevivePlayer();
+    return;
+  }
+
+  /* ── Build callbacks ── */
+  const callbacks = {
+    adStarted: () => {
+      console.log('[CG] AD START');
+      __cgIsAdPlaying = true;
+      if (musicEl && !musicEl.paused) {
+        __cgWasMusicPlaying = true; musicEl.pause();
+      } else { __cgWasMusicPlaying = false; }
+      if (AC && AC.state === 'running') AC.suspend().catch(() => {});
+    },
+
+    adFinished: () => {
+      console.log('[CG] AD FINISHED');
+      __cgIsAdPlaying = false;
+      __cgRevivePlayer();
+    },
+
+    adError: (error) => {
+      console.warn('[CG] AD ERROR', error);
+      __cgIsAdPlaying = false;
+
+      // Resume audio
+      if (AC && AC.state === 'suspended') AC.resume().catch(() => {});
+      if (__cgWasMusicPlaying && musicEl) musicEl.play().catch(() => {});
+
+      if (player && typeof floatText === 'function') {
+        floatText(player.x, player.y - 40, 'AD NOT AVAILABLE', '#ff2b2b', false);
+      }
+
+      hideRewardAdUI();
+
+      // ---- CRAZYGAMES QA TOOL TEST MODE ----
+      const isQATool = new URLSearchParams(window.location.search).get('qaTool') === 'true';
+
+      if (isQATool) {
+        // QA MODE: Cho hồi sinh để test logic revive
+        // LƯU Ý: Đổi tên __cgRevivePlayer thành tên hàm revive/respawn của bạn nếu khác
+        console.log('[CG QA] Ad failed, auto-reviving for QA test');
+        __cgRevivePlayer(); // <--- HÀM HỒI SINH CỦA BẠN
+        return;
+      } else {
+        // PRODUCTION MODE: TUYỆT ĐỐI KHÔNG CHO REVIVE
+        // Người chơi bật Adblock / ad bị lỗi = thua, chơi lại từ đầu
+        
+        // Hiện lại bảng GameOver / Retry thông thường
+        // Game của bạn đã ở state='dead' từ hàm die()
+        // Nếu bạn có hàm showGameOverScreen() riêng thì gọi ở đây:
+        // showGameOverScreen(); // <--- ĐỔI TÊN HÀM NÀY CHO ĐÚNG VỚI GAME CỦA BẠN
+        
+        // Đảm bảo splash Game Over hiển thị, không kẹt UI
+        const splash = document.getElementById('splash');
+        if (splash) splash.classList.remove('hide');
+        
+        state = 'dead';
+
+        // TUYỆT ĐỐI KHÔNG gọi revive / respawn ở đây
+        // Người chơi chỉ được revive ở adFinished
+        return;
+      }
+    }
+  };
+
+  /* ── Call SDK ── */
+  try {
+    const adMod = window.CrazyGames.SDK.ad;
+    if (adMod && typeof adMod.requestAd === 'function') {
+      console.log('[CG] Requesting rewarded ad via SDK…');
+      adMod.requestAd('rewarded', callbacks);
+    } else {
+      throw new Error('ad.requestAd not available');
+    }
+  } catch (err) {
+    // requestAd itself threw (Uncaught [object Object], etc.)
+    console.warn('[CG] requestAd() threw:', err);
+    __cgIsAdPlaying = false;
+
+    // Resume audio
+    if (AC && AC.state === 'suspended') AC.resume().catch(() => {});
+    if (__cgWasMusicPlaying && musicEl) musicEl.play().catch(() => {});
+
+    // Fallback: auto-revive so game is never stuck
+    console.log('[CG] Fallback → auto-reviving player.');
+    __cgRevivePlayer();
+  }
+};
+
+/* ========== END CG SDK v3 INTEGRATION ========== */
 
 })();
 </script>
 <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0cf9b0b786120ea',t:'MTc4MTY3MzYzMg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0d045b72ccc853a',t:'MTc4MTY4MDYyMw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0d2f1b06aa52637',t:'MTc4MTcwODYzOA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0da87f7bdea6e5e',t:'MTc4MTc4ODE5NA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon="{&quot;version&quot;:&quot;2024.11.0&quot;,&quot;token&quot;:&quot;1954b47c125f43f8b4338b3c4f804e4f&quot;,&quot;server_timing&quot;:{&quot;name&quot;:{&quot;cfCacheStatus&quot;:true,&quot;cfEdge&quot;:true,&quot;cfExtPri&quot;:true,&quot;cfL4&quot;:true,&quot;cfOrigin&quot;:true,&quot;cfSpeedBrain&quot;:true},&quot;location_startswith&quot;:null}} crossorigin="anonymous"></script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0db93fe5fdd08f9',t:'MTc4MTc5OTE3Mg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0f82f6fea26dd8c',t:'MTc4MjA5OTE0MQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0f8efed2998a8ad',t:'MTc4MjEwNzAyNQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a10011867adedd63',t:'MTc4MjE4MTgwMg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a10020778d5b5de2',t:'MTc4MjE4MjQxNA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1005bdb5f2ae2e4',t:'MTc4MjE4NDg0Ng=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a10bb4021ca285a0',t:'MTc4MjMwMzgwMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
-</html>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0db93fe5fdd08f9',t:'MTc4MTc5OTE3Mg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0f82f6fea26dd8c',t:'MTc4MjA5OTE0MQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0f8efed2998a8ad',t:'MTc4MjEwNzAyNQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a10011867adedd63',t:'MTc4MjE4MTgwMg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a10020778d5b5de2',t:'MTc4MjE4MjQxNA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1005bdb5f2ae2e4',t:'MTc4MjE4NDg0Ng=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a10bb4021ca285a0',t:'MTc4MjMwMzgwMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();
+/* [CG-FIX] Old broken external SDK block removed — code moved inside IIFE */
+</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a111d7f8fcb15dd6',t:'MTc4MjM2ODE4OA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1120552bd688546',t:'MTc4MjM3MDA0NQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a114f1442dbcdd9a',t:'MTc4MjQwMDY4MQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
